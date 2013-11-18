@@ -81,6 +81,9 @@
     <ClCompile Include="modelshaderclass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="playerclass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="applicationclass.h">
@@ -144,6 +147,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="modelshaderclass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="mobileentityclass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="playerclass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

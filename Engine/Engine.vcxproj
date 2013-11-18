@@ -92,6 +92,7 @@
     <ClCompile Include="minimapclass.cpp" />
     <ClCompile Include="modelclass.cpp" />
     <ClCompile Include="modelshaderclass.cpp" />
+    <ClCompile Include="playerclass.cpp" />
     <ClCompile Include="positionclass.cpp" />
     <ClCompile Include="systemclass.cpp" />
     <ClCompile Include="terrainclass.cpp" />
@@ -113,8 +114,10 @@
     <ClInclude Include="inputclass.h" />
     <ClInclude Include="lightclass.h" />
     <ClInclude Include="minimapclass.h" />
+    <ClInclude Include="mobileentityclass.h" />
     <ClInclude Include="modelclass.h" />
     <ClInclude Include="modelshaderclass.h" />
+    <ClInclude Include="playerclass.h" />
     <ClInclude Include="positionclass.h" />
     <ClInclude Include="systemclass.h" />
     <ClInclude Include="terrainclass.h" />

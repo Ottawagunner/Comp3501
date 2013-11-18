@@ -33,6 +33,7 @@ const float SCREEN_NEAR = 0.1f;
 #include "textureshaderclass.h"
 #include "minimapclass.h"
 #include "modelshaderclass.h"
+#include "playerclass.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 // Class name: ApplicationClass
@@ -67,8 +68,7 @@ private:
 	LightClass* m_Light;
 	TextureShaderClass* m_TextureShader;
 	MiniMapClass* m_MiniMap;
-	ModelClass*	m_Model;
-	ModelShaderClass* m_ModelShader;
+	PlayerClass* m_Player;
 };
 
 #endif

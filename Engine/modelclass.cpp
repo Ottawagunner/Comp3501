@@ -408,15 +408,6 @@ bool ModelClass::LoadModel(char* filename)
 	// Close the file.
 	fin.close();
 
-	// Open the output file.
-	fout.open("model.txt");
-	
-	// Write out the file header that our model format uses.
-	fout << "Vertex Count: " << (faceCount * 3) << endl;
-	fout << endl;
-	fout << "Data:" << endl;
-	fout << endl;
-
 	// Create the vertex array.
 	m_vertices = new VertexType[m_vertexCount];
 	if(!m_vertices)
@@ -445,11 +436,6 @@ bool ModelClass::LoadModel(char* filename)
 		
 		m_indices[indexCount] = indexCount;
 
-		fout << vertices[vIndex].x << ' ' << vertices[vIndex].y << ' ' << vertices[vIndex].z << ' '
-			 << texcoords[tIndex].x << ' ' << texcoords[tIndex].y << ' '
-			 << normals[nIndex].x << ' ' << normals[nIndex].y << ' ' << normals[nIndex].z
-			 << " Index: " << m_indices[indexCount] << endl;
-
 		indexCount++;
 
 		vIndex = faces[i].vIndex2 - 1;
@@ -462,11 +448,6 @@ bool ModelClass::LoadModel(char* filename)
 
 		m_indices[indexCount] = indexCount;
 
-		fout << vertices[vIndex].x << ' ' << vertices[vIndex].y << ' ' << vertices[vIndex].z << ' '
-			 << texcoords[tIndex].x << ' ' << texcoords[tIndex].y << ' '
-			 << normals[nIndex].x << ' ' << normals[nIndex].y << ' ' << normals[nIndex].z
-			 << " Index: " << m_indices[indexCount] << endl;
-		
 		indexCount++;
 
 		vIndex = faces[i].vIndex3 - 1;
@@ -479,17 +460,9 @@ bool ModelClass::LoadModel(char* filename)
 
 		m_indices[indexCount] = indexCount;
 
-		fout << vertices[vIndex].x << ' ' << vertices[vIndex].y << ' ' << vertices[vIndex].z << ' '
-			 << texcoords[tIndex].x << ' ' << texcoords[tIndex].y << ' '
-			 << normals[nIndex].x << ' ' << normals[nIndex].y << ' ' << normals[nIndex].z
-			 << " Index: " << m_indices[indexCount] << endl;
-
 		indexCount++;
 
 	}
-
-	// Close the output file.
-	fout.close();
 
 	// Release the four data structures.
 	if(vertices)
