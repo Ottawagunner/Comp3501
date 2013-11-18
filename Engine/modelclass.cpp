@@ -44,11 +44,11 @@ bool ModelClass::Initialize(ID3D11Device* device, char* modelFilename, WCHAR* te
 	}
 
 	// Load the texture for this model.
-	/*result = LoadTexture(device, textureFilename);
+	result = LoadTexture(device, textureFilename);
 	if(!result)
 	{
 		return false;
-	}*/
+	}
 
 	return true;
 }
@@ -438,50 +438,54 @@ bool ModelClass::LoadModel(char* filename)
 		vIndex = faces[i].vIndex1 - 1;
 		tIndex = faces[i].tIndex1 - 1;
 		nIndex = faces[i].nIndex1 - 1;
+		
+		m_vertices[indexCount].position = D3DXVECTOR3(vertices[vIndex].x, vertices[vIndex].y, vertices[vIndex].z);
+		m_vertices[indexCount].texture = D3DXVECTOR2(texcoords[tIndex].x, texcoords[tIndex].y);
+		m_vertices[indexCount].normal = D3DXVECTOR3(normals[nIndex].x,normals[nIndex].y, normals[nIndex].z);
+		
+		m_indices[indexCount] = indexCount;
 
 		fout << vertices[vIndex].x << ' ' << vertices[vIndex].y << ' ' << vertices[vIndex].z << ' '
 			 << texcoords[tIndex].x << ' ' << texcoords[tIndex].y << ' '
-			 << normals[nIndex].x << ' ' << normals[nIndex].y << ' ' << normals[nIndex].z << endl;
-		
-		m_vertices[i].position = D3DXVECTOR3(vertices[vIndex].x, vertices[vIndex].y, vertices[vIndex].z);
-		m_vertices[i].texture = D3DXVECTOR2(texcoords[tIndex].x, texcoords[tIndex].y);
-		m_vertices[i].normal = D3DXVECTOR3(normals[nIndex].x,normals[nIndex].y, normals[nIndex].z);
-
-		m_indices[i] = i;
+			 << normals[nIndex].x << ' ' << normals[nIndex].y << ' ' << normals[nIndex].z
+			 << " Index: " << m_indices[indexCount] << endl;
 
 		indexCount++;
 
 		vIndex = faces[i].vIndex2 - 1;
 		tIndex = faces[i].tIndex2 - 1;
 		nIndex = faces[i].nIndex2 - 1;
+		
+		m_vertices[indexCount].position = D3DXVECTOR3(vertices[vIndex].x, vertices[vIndex].y, vertices[vIndex].z);
+		m_vertices[indexCount].texture = D3DXVECTOR2(texcoords[tIndex].x, texcoords[tIndex].y);
+		m_vertices[indexCount].normal = D3DXVECTOR3(normals[nIndex].x,normals[nIndex].y, normals[nIndex].z);
+
+		m_indices[indexCount] = indexCount;
 
 		fout << vertices[vIndex].x << ' ' << vertices[vIndex].y << ' ' << vertices[vIndex].z << ' '
 			 << texcoords[tIndex].x << ' ' << texcoords[tIndex].y << ' '
-			 << normals[nIndex].x << ' ' << normals[nIndex].y << ' ' << normals[nIndex].z << endl;
-
-		m_vertices[i].position = D3DXVECTOR3(vertices[vIndex].x, vertices[vIndex].y, vertices[vIndex].z);
-		m_vertices[i].texture = D3DXVECTOR2(texcoords[tIndex].x, texcoords[tIndex].y);
-		m_vertices[i].normal = D3DXVECTOR3(normals[nIndex].x,normals[nIndex].y, normals[nIndex].z);
-
-		m_indices[i] = i;
-
+			 << normals[nIndex].x << ' ' << normals[nIndex].y << ' ' << normals[nIndex].z
+			 << " Index: " << m_indices[indexCount] << endl;
+		
 		indexCount++;
 
 		vIndex = faces[i].vIndex3 - 1;
 		tIndex = faces[i].tIndex3 - 1;
 		nIndex = faces[i].nIndex3 - 1;
 
+		m_vertices[indexCount].position = D3DXVECTOR3(vertices[vIndex].x, vertices[vIndex].y, vertices[vIndex].z);
+		m_vertices[indexCount].texture = D3DXVECTOR2(texcoords[tIndex].x, texcoords[tIndex].y);
+		m_vertices[indexCount].normal = D3DXVECTOR3(normals[nIndex].x,normals[nIndex].y, normals[nIndex].z);
+
+		m_indices[indexCount] = indexCount;
+
 		fout << vertices[vIndex].x << ' ' << vertices[vIndex].y << ' ' << vertices[vIndex].z << ' '
 			 << texcoords[tIndex].x << ' ' << texcoords[tIndex].y << ' '
-			 << normals[nIndex].x << ' ' << normals[nIndex].y << ' ' << normals[nIndex].z << endl;
-
-		m_vertices[i].position = D3DXVECTOR3(vertices[vIndex].x, vertices[vIndex].y, vertices[vIndex].z);
-		m_vertices[i].texture = D3DXVECTOR2(texcoords[tIndex].x, texcoords[tIndex].y);
-		m_vertices[i].normal = D3DXVECTOR3(normals[nIndex].x,normals[nIndex].y, normals[nIndex].z);
-
-		m_indices[i] = i;
+			 << normals[nIndex].x << ' ' << normals[nIndex].y << ' ' << normals[nIndex].z
+			 << " Index: " << m_indices[indexCount] << endl;
 
 		indexCount++;
+
 	}
 
 	// Close the output file.

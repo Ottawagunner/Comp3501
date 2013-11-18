@@ -20,6 +20,7 @@ ApplicationClass::ApplicationClass()
 	m_Light = 0;
 	m_TextureShader = 0;
 	m_MiniMap = 0;
+	m_ModelShader = 0;
 }
 
 
@@ -100,7 +101,7 @@ bool ApplicationClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidt
 	}
 
 	// Initialize the model object.
-	result = m_Model->Initialize(m_Direct3D->GetDevice(), "../Engine/data/cube.obj", L"../Engine/data/seafloor.dds");
+	result = m_Model->Initialize(m_Direct3D->GetDevice(), "../Engine/data/HUMMWV.obj", L"../Engine/data/Hummwv.dds");
 	if(!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
@@ -208,6 +209,21 @@ bool ApplicationClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidt
 		return false;
 	}
 
+	// Create the model shader object.
+	m_ModelShader = new ModelShaderClass;
+	if(!m_ModelShader)
+	{
+		return false;
+	}
+
+	// Initialize the terrain shader object.
+	result = m_ModelShader->Initialize(m_Direct3D->GetDevice(), hwnd);
+	if(!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the model shader object.", L"Error", MB_OK);
+		return false;
+	}
+
 	// Create the terrain shader object.
 	m_TerrainShader = new TerrainShaderClass;
 	if(!m_TerrainShader)
@@ -298,6 +314,14 @@ void ApplicationClass::Shutdown()
 		m_Light = 0;
 	}
 
+	// Release the model shader object.
+	if(m_ModelShader)
+	{
+		m_ModelShader->Shutdown();
+		delete m_ModelShader;
+		m_ModelShader = 0;
+	}
+
 	// Release the terrain shader object.
 	if(m_TerrainShader)
 	{
@@ -349,6 +373,14 @@ void ApplicationClass::Shutdown()
 	{
 		delete m_Timer;
 		m_Timer = 0;
+	}
+
+	// Release the model object.
+	if(m_Model)
+	{
+		m_Model->Shutdown();
+		delete m_Model;
+		m_Model = 0;
 	}
 
 	// Release the terrain object.
@@ -521,6 +553,13 @@ bool ApplicationClass::RenderGraphics()
 	m_Camera->GetViewMatrix(viewMatrix);
 	m_Direct3D->GetProjectionMatrix(projectionMatrix);
 	m_Direct3D->GetOrthoMatrix(orthoMatrix);
+
+	// Render the model buffers.
+	m_Model->Render(m_Direct3D->GetDeviceContext());
+
+	// Render the model using the model shader.
+	result = m_ModelShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, 
+									 m_Light->GetAmbientColor(), m_Light->GetDiffuseColor(), m_Light->GetDirection(), m_Model->GetTexture());
 
 	// Render the terrain buffers.
 	m_Terrain->Render(m_Direct3D->GetDeviceContext());
