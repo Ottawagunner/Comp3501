@@ -20,12 +20,14 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -89,6 +91,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="minimapclass.cpp" />
     <ClCompile Include="modelclass.cpp" />
+    <ClCompile Include="modelshaderclass.cpp" />
     <ClCompile Include="positionclass.cpp" />
     <ClCompile Include="systemclass.cpp" />
     <ClCompile Include="terrainclass.cpp" />
@@ -111,6 +114,7 @@
     <ClInclude Include="lightclass.h" />
     <ClInclude Include="minimapclass.h" />
     <ClInclude Include="modelclass.h" />
+    <ClInclude Include="modelshaderclass.h" />
     <ClInclude Include="positionclass.h" />
     <ClInclude Include="systemclass.h" />
     <ClInclude Include="terrainclass.h" />
@@ -123,6 +127,8 @@
   <ItemGroup>
     <None Include="font.ps" />
     <None Include="font.vs" />
+    <None Include="model.ps" />
+    <None Include="model.vs" />
     <None Include="terrain.ps" />
     <None Include="terrain.vs" />
     <None Include="texture.ps" />
