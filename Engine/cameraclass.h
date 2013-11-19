@@ -22,6 +22,7 @@ public:
 	~CameraClass();
 
 	void SetPosition(float, float, float);
+	void SetRelativeToReference(float, float, float, float, float, float);
 	void SetRotation(float, float, float);
 
 	D3DXVECTOR3 GetPosition();
@@ -34,6 +35,8 @@ private:
 	float m_positionX, m_positionY, m_positionZ;
 	float m_rotationX, m_rotationY, m_rotationZ;
 	D3DXMATRIX m_viewMatrix;
+
+	D3DXVECTOR3 m_avatarPosition;
 };
 
 #endif

@@ -467,13 +467,8 @@ bool ApplicationClass::HandleInput(float frameTime)
 	m_Player->GetPosition(posX, posY, posZ);
 	m_Player->GetRotation(rotX, rotY, rotZ);
 
-	// Put camera above and behind the car
-	posY += 10.0f;
-	posZ -= 30.0f;
-
 	// Set the position of the camera.
-	m_Camera->SetPosition(posX, posY, posZ);
-	m_Camera->SetRotation(rotX, rotY, rotZ);
+	m_Camera->SetRelativeToReference(posX, posY, posZ, rotX, rotY, rotZ);
 
 	// Update the position values in the text object.
 	result = m_Text->SetCameraPosition(posX, posY, posZ, m_Direct3D->GetDeviceContext());

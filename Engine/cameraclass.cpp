@@ -4,6 +4,9 @@
 #include "cameraclass.h"
 
 
+// This determines camera's position relative to player
+const D3DXVECTOR3*	m_thirdPersonReference = new D3DXVECTOR3(0, 15.0f, -30.0f);
+
 CameraClass::CameraClass()
 {
 	m_positionX = 0.0f;
@@ -34,6 +37,26 @@ void CameraClass::SetPosition(float x, float y, float z)
 	return;
 }
 
+void CameraClass::SetRelativeToReference(float px, float py, float pz, float rx, float ry, float rz)
+{
+	D3DXMATRIX rotationMatrixY;
+	D3DXVECTOR3 cameraPosition;
+	D3DXVECTOR4 transformedReference;
+
+	// Update avatar position
+	m_avatarPosition = D3DXVECTOR3(px, py, pz);
+	
+	// Perform calculations to position camera behind avatar
+	D3DXMatrixRotationY(&rotationMatrixY, ry * 0.0174532925f);
+	D3DXVec3Transform(&transformedReference, m_thirdPersonReference, &rotationMatrixY);
+	cameraPosition = D3DXVECTOR3(transformedReference.x, transformedReference.y, transformedReference.z) + m_avatarPosition;
+
+	m_positionX = cameraPosition.x;
+	m_positionY = cameraPosition.y;
+	m_positionZ = cameraPosition.z;
+
+	return;
+}
 
 void CameraClass::SetRotation(float x, float y, float z)
 {
@@ -58,10 +81,9 @@ D3DXVECTOR3 CameraClass::GetRotation()
 
 void CameraClass::Render()
 {
-	D3DXVECTOR3 up, position, lookAt;
+	D3DXVECTOR3 up, position;
 	float yaw, pitch, roll;
 	D3DXMATRIX rotationMatrix;
-
 
 	// Setup the vector that points upwards.
 	up.x = 0.0f;
@@ -73,11 +95,6 @@ void CameraClass::Render()
 	position.y = m_positionY;
 	position.z = m_positionZ;
 
-	// Setup where the camera is looking by default.
-	lookAt.x = 0.0f;
-	lookAt.y = 0.0f;
-	lookAt.z = 1.0f;
-
 	// Set the yaw (Y axis), pitch (X axis), and roll (Z axis) rotations in radians.
 	pitch = m_rotationX * 0.0174532925f;
 	yaw   = m_rotationY * 0.0174532925f;
@@ -87,14 +104,11 @@ void CameraClass::Render()
 	D3DXMatrixRotationYawPitchRoll(&rotationMatrix, yaw, pitch, roll);
 
 	// Transform the lookAt and up vector by the rotation matrix so the view is correctly rotated at the origin.
-	D3DXVec3TransformCoord(&lookAt, &lookAt, &rotationMatrix);
+	D3DXVec3TransformCoord(&m_avatarPosition, &m_avatarPosition, &rotationMatrix);
 	D3DXVec3TransformCoord(&up, &up, &rotationMatrix);
 
-	// Translate the rotated camera position to the location of the viewer.
-	lookAt = position + lookAt;
-
 	// Finally create the view matrix from the three updated vectors.
-	D3DXMatrixLookAtLH(&m_viewMatrix, &position, &lookAt, &up);
+	D3DXMatrixLookAtLH(&m_viewMatrix, &position, &m_avatarPosition, &up);
 
 	return;
 }
