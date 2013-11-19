@@ -93,7 +93,6 @@
     <ClCompile Include="modelclass.cpp" />
     <ClCompile Include="modelshaderclass.cpp" />
     <ClCompile Include="playerclass.cpp" />
-    <ClCompile Include="positionclass.cpp" />
     <ClCompile Include="systemclass.cpp" />
     <ClCompile Include="terrainclass.cpp" />
     <ClCompile Include="terrainshaderclass.cpp" />
@@ -118,7 +117,6 @@
     <ClInclude Include="modelclass.h" />
     <ClInclude Include="modelshaderclass.h" />
     <ClInclude Include="playerclass.h" />
-    <ClInclude Include="positionclass.h" />
     <ClInclude Include="systemclass.h" />
     <ClInclude Include="terrainclass.h" />
     <ClInclude Include="terrainshaderclass.h" />

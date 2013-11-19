@@ -11,7 +11,6 @@ ApplicationClass::ApplicationClass()
 	m_Camera = 0;
 	m_Terrain = 0;
 	m_Timer = 0;
-	m_Position = 0;
 	m_Fps = 0;
 	m_Cpu = 0;
 	m_FontShader = 0;
@@ -72,6 +71,19 @@ bool ApplicationClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidt
 		MessageBox(hwnd, L"Could not initialize DirectX 11.", L"Error", MB_OK);
 		return false;
 	}
+	
+	// Create the player
+	m_Player = new PlayerClass;
+	if (!m_Player)
+	{
+		return false;
+	}
+	result = m_Player->Initialize(m_Direct3D->GetDevice(), hwnd);
+	if(!result)
+	{
+		MessageBox(hwnd, L"Could not initialize Player object.", L"Error", MB_OK);
+		return false;
+	}
 
 	// Create the camera object.
 	m_Camera = new CameraClass;
@@ -91,19 +103,6 @@ bool ApplicationClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidt
 	cameraZ = -7.0f;
 
 	m_Camera->SetPosition(cameraX, cameraY, cameraZ);
-
-	// Create the player
-	m_Player = new PlayerClass;
-	if (!m_Player)
-	{
-		return false;
-	}
-	result = m_Player->Initialize(m_Direct3D->GetDevice(), hwnd);
-	if(!result)
-	{
-		MessageBox(hwnd, L"Could not initialize Player object.", L"Error", MB_OK);
-		return false;
-	}
 
 	// Create the terrain object.
 	m_Terrain = new TerrainClass;
@@ -134,16 +133,6 @@ bool ApplicationClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidt
 		MessageBox(hwnd, L"Could not initialize the timer object.", L"Error", MB_OK);
 		return false;
 	}
-
-	// Create the position object.
-	m_Position = new PositionClass;
-	if(!m_Position)
-	{
-		return false;
-	}
-
-	// Set the initial position of the viewer to the same as the initial camera position.
-	m_Position->SetPosition(cameraX, cameraY, cameraZ);
 
 	// Create the fps object.
 	m_Fps = new FpsClass;
@@ -343,13 +332,6 @@ void ApplicationClass::Shutdown()
 		m_Fps = 0;
 	}
 
-	// Release the position object.
-	if(m_Position)
-	{
-		delete m_Position;
-		m_Position = 0;
-	}
-
 	// Release the timer object.
 	if(m_Timer)
 	{
@@ -454,36 +436,40 @@ bool ApplicationClass::HandleInput(float frameTime)
 
 
 	// Set the frame time for calculating the updated position.
-	m_Position->SetFrameTime(frameTime);
+	m_Player->SetFrameTime(frameTime);
 
 	// Handle the input.
 	keyDown = m_Input->IsLeftPressed();
-	m_Position->TurnLeft(keyDown);
+	m_Player->TurnLeft(keyDown);
 
 	keyDown = m_Input->IsRightPressed();
-	m_Position->TurnRight(keyDown);
+	m_Player->TurnRight(keyDown);
 
 	keyDown = m_Input->IsUpPressed();
-	m_Position->MoveForward(keyDown);
+	m_Player->MoveForward(keyDown);
 
 	keyDown = m_Input->IsDownPressed();
-	m_Position->MoveBackward(keyDown);
+	m_Player->MoveBackward(keyDown);
 
 	keyDown = m_Input->IsAPressed();
-	m_Position->MoveUpward(keyDown);
+	m_Player->MoveUpward(keyDown);
 
 	keyDown = m_Input->IsZPressed();
-	m_Position->MoveDownward(keyDown);
+	m_Player->MoveDownward(keyDown);
 
 	keyDown = m_Input->IsPgUpPressed();
-	m_Position->LookUpward(keyDown);
+	m_Player->LookUpward(keyDown);
 
 	keyDown = m_Input->IsPgDownPressed();
-	m_Position->LookDownward(keyDown);
+	m_Player->LookDownward(keyDown);
 	
 	// Get the view point position/rotation.
-	m_Position->GetPosition(posX, posY, posZ);
-	m_Position->GetRotation(rotX, rotY, rotZ);
+	m_Player->GetPosition(posX, posY, posZ);
+	m_Player->GetRotation(rotX, rotY, rotZ);
+
+	// Put camera above and behind the car
+	posY += 10.0f;
+	posZ -= 30.0f;
 
 	// Set the position of the camera.
 	m_Camera->SetPosition(posX, posY, posZ);

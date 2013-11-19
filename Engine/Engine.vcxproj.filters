@@ -51,9 +51,6 @@
     <ClCompile Include="minimapclass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="positionclass.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="systemclass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -117,9 +114,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="minimapclass.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="positionclass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="systemclass.h">
