@@ -23,17 +23,7 @@
 class ModeledObjectClass
 {
 public:
-	bool	InitializeModel(ID3D11Device*, HWND hwnd);
-	void	ShutdownModel();
-
-	virtual bool	RenderModel(ID3D11DeviceContext*, LightClass*, D3DXMATRIX*, D3DXMATRIX*) = 0;
-
-public:
-	ModelClass*			m_Model;
-	ModelShaderClass*	m_ModelShader;
-
-	char*				m_modelFileName;
-	WCHAR*				m_textureFileName;
+	virtual bool	RenderModel(ID3D11DeviceContext*, ModelClass*, ModelShaderClass*, LightClass*, D3DXMATRIX*, D3DXMATRIX*) = 0;
 };
 
 

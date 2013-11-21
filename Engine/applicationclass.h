@@ -72,6 +72,10 @@ private:
 	TextureShaderClass* m_TextureShader;
 	MiniMapClass* m_MiniMap;
 	PlayerClass* m_Player;
+	ModelShaderClass* m_ModelShader;
+	ModelClass* m_PlayerModel;
+	ModelClass* m_EnemyModel;
+	ModelClass* m_ProjectileModel;
 	std::vector<EnemyClass*> m_Enemies;
 	std::vector<ProjectileClass*> m_Projectiles;
 };

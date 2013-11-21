@@ -28,7 +28,7 @@ class MobileEntityClass : public ModeledObjectClass
 public:
 	MobileEntityClass();
 
-	virtual bool RenderModel(ID3D11DeviceContext*, LightClass*, D3DXMATRIX*, D3DXMATRIX*) = 0;
+	virtual bool RenderModel(ID3D11DeviceContext*, ModelClass*, ModelShaderClass*,  LightClass*, D3DXMATRIX*, D3DXMATRIX*) = 0;
 	
 	void SetPosition(float x, float y, float z);
 	void SetRotation(float x, float y, float z);

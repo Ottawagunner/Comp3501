@@ -3,9 +3,6 @@
 
 PlayerClass::PlayerClass(void) : MobileEntityClass()
 {
-	m_modelFileName = "../Engine/data/HUMMWV.obj";
-	m_textureFileName = L"../Engine/data/HUMMWV.dds";
-
 	m_lookUpSpeed    = 0.0f;
 	m_lookDownSpeed  = 0.0f;
 }
@@ -15,7 +12,7 @@ PlayerClass::~PlayerClass(void)
 {
 }
 
-bool PlayerClass::RenderModel(ID3D11DeviceContext* deviceContext, LightClass* light, D3DXMATRIX* viewMatrix, D3DXMATRIX* projectionMatrix)
+bool PlayerClass::RenderModel(ID3D11DeviceContext* deviceContext,  ModelClass* model, ModelShaderClass* modelShader,  LightClass* light, D3DXMATRIX* viewMatrix, D3DXMATRIX* projectionMatrix)
 {
 	bool result = true;
 
@@ -28,11 +25,11 @@ bool PlayerClass::RenderModel(ID3D11DeviceContext* deviceContext, LightClass* li
 	worldMatrix = scaleMatrix * rotationMatrixY * translationMatrix;
 
 	// Render the model buffers.
-	m_Model->Render(deviceContext);
+	model->Render(deviceContext);
 
 	// Render the model using the model shader.
-	result = m_ModelShader->Render(deviceContext, m_Model->GetIndexCount(), worldMatrix, *viewMatrix, *projectionMatrix, 
-									 light->GetAmbientColor(), light->GetDiffuseColor(), light->GetDirection(), m_Model->GetTexture());
+	result = modelShader->Render(deviceContext, model->GetIndexCount(), worldMatrix, *viewMatrix, *projectionMatrix, 
+									 light->GetAmbientColor(), light->GetDiffuseColor(), light->GetDirection(), model->GetTexture());
 
 	return result;
 }

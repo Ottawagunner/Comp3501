@@ -72,6 +72,43 @@ bool ApplicationClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidt
 		MessageBox(*m_Hwnd, L"Could not initialize DirectX 11.", L"Error", MB_OK);
 		return false;
 	}
+
+	// Initialize all models, maybe move this into a graphics class?
+	
+	m_PlayerModel = new ModelClass;
+	result = m_PlayerModel->Initialize(m_Direct3D->GetDevice(), "../Engine/data/HUMMWV.obj", L"../Engine/data/HUMMWV.dds");
+	if(!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the player model object.", L"Error", MB_OK);
+		return false;
+	}
+	
+	m_EnemyModel = new ModelClass;
+	result = m_EnemyModel->Initialize(m_Direct3D->GetDevice(),"../Engine/data/buggy.obj", L"../Engine/data/HUMMWV.dds");
+	if(!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the enemy model object.", L"Error", MB_OK);
+		return false;
+	}
+	
+	m_ProjectileModel = new ModelClass;
+	result = m_ProjectileModel->Initialize(m_Direct3D->GetDevice(),"../Engine/data/HUMMWV.obj", L"../Engine/data/HUMMWV.dds");
+	if(!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the projectile model object.", L"Error", MB_OK);
+		return false;
+	}
+
+	// Create the model shader object.
+	m_ModelShader = new ModelShaderClass;
+
+	// Initialize the terrain shader object.
+	result = m_ModelShader->Initialize(m_Direct3D->GetDevice(), hwnd);
+	if(!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the model shader object.", L"Error", MB_OK);
+		return false;
+	}
 	
 	// Create the player
 	m_Player = new PlayerClass;
@@ -79,19 +116,10 @@ bool ApplicationClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidt
 	{
 		return false;
 	}
-	result = m_Player->InitializeModel(m_Direct3D->GetDevice(), *m_Hwnd);
-	if(!result)
-	{
-		MessageBox(*m_Hwnd, L"Could not initialize Player object.", L"Error", MB_OK);
-		return false;
-	}
 
 	// Create the enemies
 	m_Enemies.push_back(new EnemyClass(5.0f, 0.0f, 80.0f));
-	for(std::vector<EnemyClass*>::iterator it = m_Enemies.begin(); it != m_Enemies.end(); ++it) {
-		(*it)->InitializeModel(m_Direct3D->GetDevice(), *m_Hwnd);
-	}
-
+	
 	// Create the camera object.
 	m_Camera = new CameraClass;
 	if(!m_Camera)
@@ -292,21 +320,29 @@ void ApplicationClass::Shutdown()
 		m_Light = 0;
 	}
 
-	// Release the player object.
-	if(m_Player)
+	// Release the player model.
+	if(m_PlayerModel)
 	{
-		m_Player->ShutdownModel();
-		delete m_Player;
-		m_Player = 0;
+		m_PlayerModel->Shutdown();
+		delete m_PlayerModel;
+		m_PlayerModel = 0;
 	}
 
-	// Release all enemy objects
-	for(std::vector<EnemyClass*>::iterator it = m_Enemies.begin(); it != m_Enemies.end(); ++it) {
-		(*it)->ShutdownModel();
-		delete (*it);
-		(*it) = 0;
+	// Release the enemy model
+	if(m_EnemyModel)
+	{
+		m_EnemyModel->Shutdown();
+		delete m_EnemyModel;
+		m_EnemyModel = 0;
 	}
-	m_Enemies.clear();
+
+	// Release the projectile model
+	if(m_ProjectileModel)
+	{
+		m_ProjectileModel->Shutdown();
+		delete m_ProjectileModel;
+		m_ProjectileModel = 0;
+	}
 
 	// Release the terrain shader object.
 	if(m_TerrainShader)
@@ -412,7 +448,7 @@ bool ApplicationClass::Frame()
 	m_Fps->Frame();
 	m_Cpu->Frame();
 
-	// Make the enemies move around
+	// Make the enemies move
 	for(std::vector<EnemyClass*>::iterator it = m_Enemies.begin(); it != m_Enemies.end(); ++it) {
 		(*it)->SetFrameTime(m_Timer->GetTime());
 		(*it)->Move();
@@ -502,10 +538,7 @@ bool ApplicationClass::HandleInput(float frameTime)
 	keyDown = m_Input->IsSpacePressed();
 	if (keyDown)
 	{
-		ProjectileClass* projectile = new ProjectileClass(m_Timer->GetTime(), posX, posY, posZ, rotX, rotY, rotZ);
-		projectile->InitializeModel(m_Direct3D->GetDevice(), *m_Hwnd);
-
-		m_Projectiles.push_back(projectile);
+		m_Projectiles.push_back(new ProjectileClass(m_Timer->GetTime(), posX, posY, posZ, rotX, rotY, rotZ));
 	}
 
 	// Set the position of the camera.
@@ -551,16 +584,16 @@ bool ApplicationClass::RenderGraphics()
 	m_Direct3D->GetOrthoMatrix(orthoMatrix);
 
 	// Render the player
-	m_Player->RenderModel(m_Direct3D->GetDeviceContext(), m_Light, &viewMatrix, &projectionMatrix);
+	m_Player->RenderModel(m_Direct3D->GetDeviceContext(), m_PlayerModel, m_ModelShader, m_Light, &viewMatrix, &projectionMatrix);
 
 	// Render the enemies
 	for(std::vector<EnemyClass*>::iterator it = m_Enemies.begin(); it != m_Enemies.end(); ++it) {
-		(*it)->RenderModel(m_Direct3D->GetDeviceContext(), m_Light, &viewMatrix, &projectionMatrix);
+		(*it)->RenderModel(m_Direct3D->GetDeviceContext(), m_EnemyModel, m_ModelShader, m_Light, &viewMatrix, &projectionMatrix);
 	}
 
 	// Render the projectiles
 	for(std::vector<ProjectileClass*>::iterator it = m_Projectiles.begin(); it != m_Projectiles.end(); ++it) {
-		(*it)->RenderModel(m_Direct3D->GetDeviceContext(), m_Light, &viewMatrix, &projectionMatrix);
+		(*it)->RenderModel(m_Direct3D->GetDeviceContext(), m_ProjectileModel, m_ModelShader, m_Light, &viewMatrix, &projectionMatrix);
 	}
 
 	// Render the terrain buffers.

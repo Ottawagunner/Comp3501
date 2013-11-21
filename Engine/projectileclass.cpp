@@ -3,9 +3,6 @@
 
 ProjectileClass::ProjectileClass(float birthday, float px, float py, float pz, float rx, float ry, float rz)
 {
-	m_modelFileName = "../Engine/data/HUMMWV.obj";
-	m_textureFileName = L"../Engine/data/HUMMWV.dds";
-
 	m_positionX = px;
 	m_positionY = py;
 	m_positionZ = pz;
@@ -30,23 +27,24 @@ bool ProjectileClass::IsStillAlive(float gameTime)
 	return (gameTime - m_birthday) > m_secondsAlive;
 }
 
-bool ProjectileClass::RenderModel(ID3D11DeviceContext* deviceContext, LightClass* light, D3DXMATRIX* viewMatrix, D3DXMATRIX* projectionMatrix)
+bool ProjectileClass::RenderModel(ID3D11DeviceContext* deviceContext, ModelClass* model, ModelShaderClass* modelShader, LightClass* light, D3DXMATRIX* viewMatrix, D3DXMATRIX* projectionMatrix)
 {
 	bool result = true;
 
-	D3DXMATRIX worldMatrix, translationMatrix, scaleMatrix;
+	D3DXMATRIX worldMatrix, translationMatrix, scaleMatrix, rotationMatrix;
 
 	D3DXMatrixScaling(&scaleMatrix, 0.10f, 0.10f, 0.10f);
 	D3DXMatrixTranslation(&translationMatrix, m_positionX, m_positionY, m_positionZ);
+	//D3DXMatrixRotationY(&rotationMatrix, m_rotationY);
 
-	worldMatrix = scaleMatrix * translationMatrix;
+	worldMatrix = scaleMatrix * /*rotationMatrix * */translationMatrix;
 
 	// Render the model buffers.
-	m_Model->Render(deviceContext);
+	model->Render(deviceContext);
 
 	// Render the model using the model shader.
-	result = m_ModelShader->Render(deviceContext, m_Model->GetIndexCount(), worldMatrix, *viewMatrix, *projectionMatrix, 
-									 light->GetAmbientColor(), light->GetDiffuseColor(), light->GetDirection(), m_Model->GetTexture());
+	result = modelShader->Render(deviceContext, model->GetIndexCount(), worldMatrix, *viewMatrix, *projectionMatrix, 
+									 light->GetAmbientColor(), light->GetDiffuseColor(), light->GetDirection(), model->GetTexture());
 
 	return result;
 }

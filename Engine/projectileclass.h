@@ -8,7 +8,7 @@ public:
 	ProjectileClass(float birthday, float px, float py, float pz, float rx, float ry, float rz);
 	~ProjectileClass(void);
 
-	bool RenderModel(ID3D11DeviceContext*, LightClass*, D3DXMATRIX*, D3DXMATRIX*);
+	bool RenderModel(ID3D11DeviceContext*, ModelClass*, ModelShaderClass*, LightClass*, D3DXMATRIX*, D3DXMATRIX*);
 
 	bool IsStillAlive(float gameTime);
 	void Move();

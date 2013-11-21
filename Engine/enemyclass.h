@@ -8,7 +8,7 @@ public:
 	EnemyClass(float x, float y, float z);
 	~EnemyClass(void);
 
-	bool	RenderModel(ID3D11DeviceContext*, LightClass*, D3DXMATRIX*, D3DXMATRIX*);
+	bool	RenderModel(ID3D11DeviceContext*, ModelClass*, ModelShaderClass*, LightClass*, D3DXMATRIX*, D3DXMATRIX*);
 
 	void Move();
 };
