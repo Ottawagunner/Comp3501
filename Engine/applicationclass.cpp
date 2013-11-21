@@ -85,6 +85,12 @@ bool ApplicationClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidt
 		return false;
 	}
 
+	// Create the enemies
+	m_Enemies.push_back(new EnemyClass(5.0f, 0.0f, 80.0f));
+	for(std::vector<EnemyClass*>::iterator it = m_Enemies.begin(); it != m_Enemies.end(); ++it) {
+		(*it)->Initialize(m_Direct3D->GetDevice(), hwnd);
+	}
+
 	// Create the camera object.
 	m_Camera = new CameraClass;
 	if(!m_Camera)
@@ -293,6 +299,14 @@ void ApplicationClass::Shutdown()
 		m_Player = 0;
 	}
 
+	// Release all enemy objects
+	for(std::vector<EnemyClass*>::iterator it = m_Enemies.begin(); it != m_Enemies.end(); ++it) {
+		(*it)->Shutdown();
+		delete (*it);
+		(*it) = 0;
+	}
+	m_Enemies.clear();
+
 	// Release the terrain shader object.
 	if(m_TerrainShader)
 	{
@@ -397,6 +411,12 @@ bool ApplicationClass::Frame()
 	m_Fps->Frame();
 	m_Cpu->Frame();
 
+	// Make the enemies move around
+	for(std::vector<EnemyClass*>::iterator it = m_Enemies.begin(); it != m_Enemies.end(); ++it) {
+		(*it)->SetFrameTime(m_Timer->GetTime());
+		(*it)->Move();
+	}
+
 	// Update the FPS value in the text object.
 	result = m_Text->SetFps(m_Fps->GetFps(), m_Direct3D->GetDeviceContext());
 	if(!result)
@@ -439,29 +459,29 @@ bool ApplicationClass::HandleInput(float frameTime)
 	m_Player->SetFrameTime(frameTime);
 
 	// Handle the input.
-	keyDown = m_Input->IsLeftPressed();
+	keyDown = m_Input->IsAPressed();
 	m_Player->TurnLeft(keyDown);
 
-	keyDown = m_Input->IsRightPressed();
+	keyDown = m_Input->IsDPressed();
 	m_Player->TurnRight(keyDown);
 
-	keyDown = m_Input->IsUpPressed();
+	keyDown = m_Input->IsWPressed();
 	m_Player->MoveForward(keyDown);
 
-	keyDown = m_Input->IsDownPressed();
+	keyDown = m_Input->IsSPressed();
 	m_Player->MoveBackward(keyDown);
 
-	keyDown = m_Input->IsAPressed();
-	m_Player->MoveUpward(keyDown);
+	//keyDown = m_Input->IsAPressed();
+	//m_Player->MoveUpward(keyDown);
 
-	keyDown = m_Input->IsZPressed();
-	m_Player->MoveDownward(keyDown);
+	//keyDown = m_Input->IsZPressed();
+	//m_Player->MoveDownward(keyDown);
 
-	keyDown = m_Input->IsPgUpPressed();
-	m_Player->LookUpward(keyDown);
+	//keyDown = m_Input->IsPgUpPressed();
+	//m_Player->LookUpward(keyDown);
 
-	keyDown = m_Input->IsPgDownPressed();
-	m_Player->LookDownward(keyDown);
+	//keyDown = m_Input->IsPgDownPressed();
+	//m_Player->LookDownward(keyDown);
 	
 	// Get the view point position/rotation.
 	m_Player->GetPosition(posX, posY, posZ);
@@ -511,6 +531,11 @@ bool ApplicationClass::RenderGraphics()
 
 	// Render the player
 	m_Player->Render(m_Direct3D->GetDeviceContext(), m_Light, &viewMatrix, &projectionMatrix);
+
+	// Render the enemies
+	for(std::vector<EnemyClass*>::iterator it = m_Enemies.begin(); it != m_Enemies.end(); ++it) {
+		(*it)->Render(m_Direct3D->GetDeviceContext(), m_Light, &viewMatrix, &projectionMatrix);
+	}
 
 	// Render the terrain buffers.
 	m_Terrain->Render(m_Direct3D->GetDeviceContext());

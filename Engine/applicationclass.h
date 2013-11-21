@@ -17,6 +17,8 @@ const float SCREEN_NEAR = 0.1f;
 ///////////////////////
 // MY CLASS INCLUDES //
 ///////////////////////
+#include <vector>
+
 #include "inputclass.h"
 #include "d3dclass.h"
 #include "cameraclass.h"
@@ -33,6 +35,7 @@ const float SCREEN_NEAR = 0.1f;
 #include "minimapclass.h"
 #include "modelshaderclass.h"
 #include "playerclass.h"
+#include "enemyclass.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 // Class name: ApplicationClass
@@ -67,6 +70,7 @@ private:
 	TextureShaderClass* m_TextureShader;
 	MiniMapClass* m_MiniMap;
 	PlayerClass* m_Player;
+	std::vector<EnemyClass*> m_Enemies;
 };
 
 #endif
