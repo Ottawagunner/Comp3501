@@ -9,10 +9,8 @@ public:
 	PlayerClass(void);
 	~PlayerClass(void);
 
-	bool	Initialize(ID3D11Device*, HWND hwnd);
-	bool	Render(ID3D11DeviceContext*, LightClass*, D3DXMATRIX*, D3DXMATRIX*);
-	void	Shutdown();
-
+	bool	RenderModel(ID3D11DeviceContext*, LightClass*, D3DXMATRIX*, D3DXMATRIX*);
+	
 	// Player only methods
 	void LookUpward(bool);
 	void LookDownward(bool);

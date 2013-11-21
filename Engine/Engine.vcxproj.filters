@@ -84,6 +84,15 @@
     <ClCompile Include="enemyclass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="projectileclass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="modeledobjectclass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mobileentityclass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="applicationclass.h">
@@ -153,6 +162,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="enemyclass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="projectileclass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="modeledobjectclass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

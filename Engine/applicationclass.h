@@ -36,6 +36,7 @@ const float SCREEN_NEAR = 0.1f;
 #include "modelshaderclass.h"
 #include "playerclass.h"
 #include "enemyclass.h"
+#include "projectileclass.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 // Class name: ApplicationClass
@@ -56,6 +57,7 @@ private:
 	bool RenderGraphics();
 
 private:
+	HWND* m_Hwnd;
 	InputClass* m_Input;
 	D3DClass* m_Direct3D;
 	CameraClass* m_Camera;
@@ -71,6 +73,7 @@ private:
 	MiniMapClass* m_MiniMap;
 	PlayerClass* m_Player;
 	std::vector<EnemyClass*> m_Enemies;
+	std::vector<ProjectileClass*> m_Projectiles;
 };
 
 #endif

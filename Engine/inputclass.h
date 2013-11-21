@@ -50,6 +50,7 @@ public:
 	bool IsSPressed();
 	bool IsDPressed();
 	bool IsZPressed();
+	bool IsSpacePressed();
 	bool IsPgUpPressed();
 	bool IsPgDownPressed();
 

@@ -22,7 +22,7 @@ public:
 	~CameraClass();
 
 	void SetPosition(float, float, float);
-	void SetRelativeToReference(float, float, float, float, float, float);
+	void SetRelativeToReference(float, float, float, float);
 	void SetRotation(float, float, float);
 
 	D3DXVECTOR3 GetPosition();

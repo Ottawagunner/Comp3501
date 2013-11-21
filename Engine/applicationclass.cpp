@@ -41,6 +41,7 @@ bool ApplicationClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidt
 	int videoMemory;
 	int terrainWidth, terrainHeight;
 
+	m_Hwnd = &hwnd;
 	
 	// Create the input object.  The input object will be used to handle reading the keyboard and mouse input from the user.
 	m_Input = new InputClass;
@@ -50,10 +51,10 @@ bool ApplicationClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidt
 	}
 
 	// Initialize the input object.
-	result = m_Input->Initialize(hinstance, hwnd, screenWidth, screenHeight);
+	result = m_Input->Initialize(hinstance, *m_Hwnd, screenWidth, screenHeight);
 	if(!result)
 	{
-		MessageBox(hwnd, L"Could not initialize the input object.", L"Error", MB_OK);
+		MessageBox(*m_Hwnd, L"Could not initialize the input object.", L"Error", MB_OK);
 		return false;
 	}
 
@@ -65,10 +66,10 @@ bool ApplicationClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidt
 	}
 
 	// Initialize the Direct3D object.
-	result = m_Direct3D->Initialize(screenWidth, screenHeight, VSYNC_ENABLED, hwnd, FULL_SCREEN, SCREEN_DEPTH, SCREEN_NEAR);
+	result = m_Direct3D->Initialize(screenWidth, screenHeight, VSYNC_ENABLED, *m_Hwnd, FULL_SCREEN, SCREEN_DEPTH, SCREEN_NEAR);
 	if(!result)
 	{
-		MessageBox(hwnd, L"Could not initialize DirectX 11.", L"Error", MB_OK);
+		MessageBox(*m_Hwnd, L"Could not initialize DirectX 11.", L"Error", MB_OK);
 		return false;
 	}
 	
@@ -78,17 +79,17 @@ bool ApplicationClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidt
 	{
 		return false;
 	}
-	result = m_Player->Initialize(m_Direct3D->GetDevice(), hwnd);
+	result = m_Player->InitializeModel(m_Direct3D->GetDevice(), *m_Hwnd);
 	if(!result)
 	{
-		MessageBox(hwnd, L"Could not initialize Player object.", L"Error", MB_OK);
+		MessageBox(*m_Hwnd, L"Could not initialize Player object.", L"Error", MB_OK);
 		return false;
 	}
 
 	// Create the enemies
 	m_Enemies.push_back(new EnemyClass(5.0f, 0.0f, 80.0f));
 	for(std::vector<EnemyClass*>::iterator it = m_Enemies.begin(); it != m_Enemies.end(); ++it) {
-		(*it)->Initialize(m_Direct3D->GetDevice(), hwnd);
+		(*it)->InitializeModel(m_Direct3D->GetDevice(), *m_Hwnd);
 	}
 
 	// Create the camera object.
@@ -121,7 +122,7 @@ bool ApplicationClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidt
 	result = m_Terrain->Initialize(m_Direct3D->GetDevice(), "../Engine/data/heightmap01.bmp", L"../Engine/data/dirt01.dds", "../Engine/data/colorm01.bmp");
 	if(!result)
 	{
-		MessageBox(hwnd, L"Could not initialize the terrain object.", L"Error", MB_OK);
+		MessageBox(*m_Hwnd, L"Could not initialize the terrain object.", L"Error", MB_OK);
 		return false;
 	}
 
@@ -136,7 +137,7 @@ bool ApplicationClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidt
 	result = m_Timer->Initialize();
 	if(!result)
 	{
-		MessageBox(hwnd, L"Could not initialize the timer object.", L"Error", MB_OK);
+		MessageBox(*m_Hwnd, L"Could not initialize the timer object.", L"Error", MB_OK);
 		return false;
 	}
 
@@ -168,10 +169,10 @@ bool ApplicationClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidt
 	}
 
 	// Initialize the font shader object.
-	result = m_FontShader->Initialize(m_Direct3D->GetDevice(), hwnd);
+	result = m_FontShader->Initialize(m_Direct3D->GetDevice(), *m_Hwnd);
 	if(!result)
 	{
-		MessageBox(hwnd, L"Could not initialize the font shader object.", L"Error", MB_OK);
+		MessageBox(*m_Hwnd, L"Could not initialize the font shader object.", L"Error", MB_OK);
 		return false;
 	}
 
@@ -183,10 +184,10 @@ bool ApplicationClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidt
 	}
 
 	// Initialize the text object.
-	result = m_Text->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), hwnd, screenWidth, screenHeight, baseViewMatrix);
+	result = m_Text->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), *m_Hwnd, screenWidth, screenHeight, baseViewMatrix);
 	if(!result)
 	{
-		MessageBox(hwnd, L"Could not initialize the text object.", L"Error", MB_OK);
+		MessageBox(*m_Hwnd, L"Could not initialize the text object.", L"Error", MB_OK);
 		return false;
 	}
 
@@ -197,7 +198,7 @@ bool ApplicationClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidt
 	result = m_Text->SetVideoCardInfo(videoCard, videoMemory, m_Direct3D->GetDeviceContext());
 	if(!result)
 	{
-		MessageBox(hwnd, L"Could not set video card info in the text object.", L"Error", MB_OK);
+		MessageBox(*m_Hwnd, L"Could not set video card info in the text object.", L"Error", MB_OK);
 		return false;
 	}
 
@@ -209,10 +210,10 @@ bool ApplicationClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidt
 	}
 
 	// Initialize the terrain shader object.
-	result = m_TerrainShader->Initialize(m_Direct3D->GetDevice(), hwnd);
+	result = m_TerrainShader->Initialize(m_Direct3D->GetDevice(), *m_Hwnd);
 	if(!result)
 	{
-		MessageBox(hwnd, L"Could not initialize the terrain shader object.", L"Error", MB_OK);
+		MessageBox(*m_Hwnd, L"Could not initialize the terrain shader object.", L"Error", MB_OK);
 		return false;
 	}
 
@@ -236,10 +237,10 @@ bool ApplicationClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidt
 	}
 
 	// Initialize the texture shader object.
-	result = m_TextureShader->Initialize(m_Direct3D->GetDevice(), hwnd);
+	result = m_TextureShader->Initialize(m_Direct3D->GetDevice(), *m_Hwnd);
 	if(!result)
 	{
-		MessageBox(hwnd, L"Could not initialize the texture shader object.", L"Error", MB_OK);
+		MessageBox(*m_Hwnd, L"Could not initialize the texture shader object.", L"Error", MB_OK);
 		return false;
 	}
 
@@ -254,11 +255,11 @@ bool ApplicationClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidt
 	}
 
 	// Initialize the mini map object.
-	result = m_MiniMap->Initialize(m_Direct3D->GetDevice(), hwnd, screenWidth, screenHeight, baseViewMatrix, (float)(terrainWidth - 1), 
+	result = m_MiniMap->Initialize(m_Direct3D->GetDevice(), *m_Hwnd, screenWidth, screenHeight, baseViewMatrix, (float)(terrainWidth - 1), 
 								   (float)(terrainHeight - 1));
 	if(!result)
 	{
-		MessageBox(hwnd, L"Could not initialize the mini map object.", L"Error", MB_OK);
+		MessageBox(*m_Hwnd, L"Could not initialize the mini map object.", L"Error", MB_OK);
 		return false;
 	}
 
@@ -294,14 +295,14 @@ void ApplicationClass::Shutdown()
 	// Release the player object.
 	if(m_Player)
 	{
-		m_Player->Shutdown();
+		m_Player->ShutdownModel();
 		delete m_Player;
 		m_Player = 0;
 	}
 
 	// Release all enemy objects
 	for(std::vector<EnemyClass*>::iterator it = m_Enemies.begin(); it != m_Enemies.end(); ++it) {
-		(*it)->Shutdown();
+		(*it)->ShutdownModel();
 		delete (*it);
 		(*it) = 0;
 	}
@@ -417,6 +418,16 @@ bool ApplicationClass::Frame()
 		(*it)->Move();
 	}
 
+	// Move the projectiles
+	// TODO: Remove projectile from vector if its dead
+	for(std::vector<ProjectileClass*>::iterator it = m_Projectiles.begin(); it != m_Projectiles.end(); ++it) {
+		
+		/*if ((*it)->IsStillAlive(m_Timer->GetTime()))
+		{*/
+			(*it)->Move();
+		//}
+	}
+
 	// Update the FPS value in the text object.
 	result = m_Text->SetFps(m_Fps->GetFps(), m_Direct3D->GetDeviceContext());
 	if(!result)
@@ -487,8 +498,18 @@ bool ApplicationClass::HandleInput(float frameTime)
 	m_Player->GetPosition(posX, posY, posZ);
 	m_Player->GetRotation(rotX, rotY, rotZ);
 
+	// Check if the player is shooting
+	keyDown = m_Input->IsSpacePressed();
+	if (keyDown)
+	{
+		ProjectileClass* projectile = new ProjectileClass(m_Timer->GetTime(), posX, posY, posZ, rotX, rotY, rotZ);
+		projectile->InitializeModel(m_Direct3D->GetDevice(), *m_Hwnd);
+
+		m_Projectiles.push_back(projectile);
+	}
+
 	// Set the position of the camera.
-	m_Camera->SetRelativeToReference(posX, posY, posZ, rotX, rotY, rotZ);
+	m_Camera->SetRelativeToReference(posX, posY, posZ, rotY);
 
 	// Update the position values in the text object.
 	result = m_Text->SetCameraPosition(posX, posY, posZ, m_Direct3D->GetDeviceContext());
@@ -530,11 +551,16 @@ bool ApplicationClass::RenderGraphics()
 	m_Direct3D->GetOrthoMatrix(orthoMatrix);
 
 	// Render the player
-	m_Player->Render(m_Direct3D->GetDeviceContext(), m_Light, &viewMatrix, &projectionMatrix);
+	m_Player->RenderModel(m_Direct3D->GetDeviceContext(), m_Light, &viewMatrix, &projectionMatrix);
 
 	// Render the enemies
 	for(std::vector<EnemyClass*>::iterator it = m_Enemies.begin(); it != m_Enemies.end(); ++it) {
-		(*it)->Render(m_Direct3D->GetDeviceContext(), m_Light, &viewMatrix, &projectionMatrix);
+		(*it)->RenderModel(m_Direct3D->GetDeviceContext(), m_Light, &viewMatrix, &projectionMatrix);
+	}
+
+	// Render the projectiles
+	for(std::vector<ProjectileClass*>::iterator it = m_Projectiles.begin(); it != m_Projectiles.end(); ++it) {
+		(*it)->RenderModel(m_Direct3D->GetDeviceContext(), m_Light, &viewMatrix, &projectionMatrix);
 	}
 
 	// Render the terrain buffers.

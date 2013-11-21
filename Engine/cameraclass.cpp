@@ -5,7 +5,7 @@
 
 
 // This determines camera's position relative to player
-const D3DXVECTOR3*	m_thirdPersonReference = new D3DXVECTOR3(0, 15.0f, -30.0f);
+const D3DXVECTOR3*	m_thirdPersonReference = new D3DXVECTOR3(0, 25.0f, -40.0f);
 
 CameraClass::CameraClass()
 {
@@ -37,7 +37,7 @@ void CameraClass::SetPosition(float x, float y, float z)
 	return;
 }
 
-void CameraClass::SetRelativeToReference(float px, float py, float pz, float rx, float ry, float rz)
+void CameraClass::SetRelativeToReference(float px, float py, float pz, float ry)
 {
 	D3DXMATRIX rotationMatrixY;
 	D3DXVECTOR3 cameraPosition;
@@ -81,7 +81,7 @@ D3DXVECTOR3 CameraClass::GetRotation()
 
 void CameraClass::Render()
 {
-	D3DXVECTOR3 up, position;
+	D3DXVECTOR3 up, position, lookAt;
 	float yaw, pitch, roll;
 	D3DXMATRIX rotationMatrix;
 
@@ -107,8 +107,9 @@ void CameraClass::Render()
 	D3DXVec3TransformCoord(&m_avatarPosition, &m_avatarPosition, &rotationMatrix);
 	D3DXVec3TransformCoord(&up, &up, &rotationMatrix);
 
+	D3DXVec3Add(&lookAt, &m_avatarPosition, &D3DXVECTOR3(0.0f, 10.0f, 0.0f));
 	// Finally create the view matrix from the three updated vectors.
-	D3DXMatrixLookAtLH(&m_viewMatrix, &position, &m_avatarPosition, &up);
+	D3DXMatrixLookAtLH(&m_viewMatrix, &position, &lookAt, &up);
 
 	return;
 }
