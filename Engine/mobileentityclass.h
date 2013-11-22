@@ -26,10 +26,8 @@
 class MobileEntityClass : public ModeledObjectClass
 {
 public:
-	MobileEntityClass();
+	MobileEntityClass(ModelClass* model, ModelShaderClass* modelShader);
 
-	virtual bool RenderModel(ID3D11DeviceContext*, ModelClass**, ModelShaderClass*,  LightClass*, D3DXMATRIX*, D3DXMATRIX*) = 0;
-	
 	void SetPosition(float x, float y, float z);
 	void SetRotation(float x, float y, float z);
 	void GetPosition(float& x, float& y, float& z);
@@ -42,6 +40,9 @@ public:
 	void MoveDownward(bool);
 	void TurnLeft(bool);
 	void TurnRight(bool);
+
+	// Inherited from ModeledObjectClass, passing it on
+	virtual D3DXMATRIX GetWorldMatrix() = 0;
 
 protected:
 	float m_positionX, m_positionY, m_positionZ;

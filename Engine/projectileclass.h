@@ -5,14 +5,14 @@
 class ProjectileClass : public ModeledObjectClass
 {
 public:
-	ProjectileClass(float px, float py, float pz, float rx, float ry, float rz);
+	ProjectileClass(ModelClass* model, ModelShaderClass* modelShader, float px, float py, float pz, float rx, float ry, float rz);
 	~ProjectileClass(void);
-
-	bool RenderModel(ID3D11DeviceContext*, ModelClass**, ModelShaderClass*, LightClass*, D3DXMATRIX*, D3DXMATRIX*);
 
 	void Stop();
 	bool IsStillAlive();
 	void Move();
+	
+	D3DXMATRIX GetWorldMatrix();
 
 protected:		
 	float m_initialPositionX, m_initialPositionY, m_initialPositionZ;

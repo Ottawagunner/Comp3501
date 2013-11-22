@@ -23,7 +23,15 @@
 class ModeledObjectClass
 {
 public:
-	virtual bool RenderModel(ID3D11DeviceContext*, ModelClass**, ModelShaderClass*, LightClass*, D3DXMATRIX*, D3DXMATRIX*) = 0;
+	ModeledObjectClass(ModelClass* model, ModelShaderClass* modelShader);
+
+	bool RenderModel(ID3D11DeviceContext*, LightClass*, D3DXMATRIX*, D3DXMATRIX*);
+
+	virtual D3DXMATRIX GetWorldMatrix() = 0;
+
+private:
+	ModelClass* m_model;
+	ModelShaderClass* m_modelShader;
 };
 
 

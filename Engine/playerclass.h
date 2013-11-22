@@ -1,19 +1,20 @@
 #pragma once
 
 #include "mobileentityclass.h"
+#include "turretclass.h"
 
 class PlayerClass :
 	public MobileEntityClass
 {
 public:
-	PlayerClass(void);
+	PlayerClass(ModelClass* model, ModelShaderClass* modelShader);
 	~PlayerClass(void);
 
-	bool	RenderModel(ID3D11DeviceContext*, ModelClass**, ModelShaderClass*, LightClass*, D3DXMATRIX*, D3DXMATRIX*);
-	
 	// Player only methods
 	void LookUpward(bool);
 	void LookDownward(bool);
+
+	D3DXMATRIX GetWorldMatrix();
 
 private:
 	float m_lookUpSpeed, m_lookDownSpeed;

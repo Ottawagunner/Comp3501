@@ -1,6 +1,6 @@
 #include "mobileentityclass.h"
 
-MobileEntityClass::MobileEntityClass() 
+MobileEntityClass::MobileEntityClass(ModelClass* model, ModelShaderClass* modelShader) : ModeledObjectClass(model, modelShader)
 {
 	m_positionX = 0.0f;
 	m_positionY = 0.0f;

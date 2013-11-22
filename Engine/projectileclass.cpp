@@ -1,7 +1,7 @@
 #include "projectileclass.h"
 
 
-ProjectileClass::ProjectileClass(float px, float py, float pz, float rx, float ry, float rz)
+ProjectileClass::ProjectileClass(ModelClass* model, ModelShaderClass* modelShader, float px, float py, float pz, float rx, float ry, float rz) : ModeledObjectClass(model, modelShader)
 {
 	m_positionX = m_initialPositionX = px;
 	m_positionY = m_initialPositionY = py;
@@ -38,10 +38,8 @@ void ProjectileClass::Stop()
 	m_isDead = true;
 }
 
-bool ProjectileClass::RenderModel(ID3D11DeviceContext* deviceContext, ModelClass** model, ModelShaderClass* modelShader, LightClass* light, D3DXMATRIX* viewMatrix, D3DXMATRIX* projectionMatrix)
+D3DXMATRIX ProjectileClass::GetWorldMatrix()
 {
-	bool result = true;
-
 	D3DXMATRIX worldMatrix, translationMatrix, scaleMatrix, rotationMatrix;
 
 	D3DXMatrixScaling(&scaleMatrix, 0.10f, 0.10f, 0.10f);
@@ -50,14 +48,7 @@ bool ProjectileClass::RenderModel(ID3D11DeviceContext* deviceContext, ModelClass
 
 	worldMatrix = scaleMatrix * /*rotationMatrix * */translationMatrix;
 
-	// Render the model buffers.
-	(*model)->Render(deviceContext);
-
-	// Render the model using the model shader.
-	result = modelShader->Render(deviceContext, (*model)->GetIndexCount(), worldMatrix, *viewMatrix, *projectionMatrix, 
-									 light->GetAmbientColor(), light->GetDiffuseColor(), light->GetDirection(), (*model)->GetTexture());
-
-	return result;
+	return worldMatrix;
 }
 
 void ProjectileClass::Move()

@@ -4,11 +4,11 @@ class EnemyClass :
 	public MobileEntityClass
 {
 public:
-	EnemyClass(void);
-	EnemyClass(float x, float y, float z);
+	EnemyClass(ModelClass* model, ModelShaderClass* modelShader);
+	EnemyClass(ModelClass* model, ModelShaderClass* modelShader, float x, float y, float z);
 	~EnemyClass(void);
 
-	bool	RenderModel(ID3D11DeviceContext*, ModelClass**, ModelShaderClass*, LightClass*, D3DXMATRIX*, D3DXMATRIX*);
+	D3DXMATRIX GetWorldMatrix();
 
 	void Move();
 };

@@ -1,7 +1,7 @@
 #include "playerclass.h"
 
 
-PlayerClass::PlayerClass(void) : MobileEntityClass()
+PlayerClass::PlayerClass(ModelClass* model, ModelShaderClass* modelShader) : MobileEntityClass(model, modelShader)
 {
 	m_lookUpSpeed    = 0.0f;
 	m_lookDownSpeed  = 0.0f;
@@ -12,13 +12,8 @@ PlayerClass::~PlayerClass(void)
 {
 }
 
-bool PlayerClass::RenderModel(ID3D11DeviceContext* deviceContext,  ModelClass** model, ModelShaderClass* modelShader,  LightClass* light, D3DXMATRIX* viewMatrix, D3DXMATRIX* projectionMatrix)
+D3DXMATRIX PlayerClass::GetWorldMatrix()
 {
-	ModelClass* body = model[0];
-	ModelClass* turret = model[1];
-
-	bool result = true;
-
 	D3DXMATRIX worldMatrix, rotationMatrixY, scaleMatrix, translationMatrix, turretRelativeHeight;
 
 	D3DXMatrixScaling(&scaleMatrix, 0.25f, 0.25f, 0.25f);
@@ -27,24 +22,7 @@ bool PlayerClass::RenderModel(ID3D11DeviceContext* deviceContext,  ModelClass** 
 
 	worldMatrix = scaleMatrix * rotationMatrixY * translationMatrix;
 
-	// Render the model buffers.
-	body->Render(deviceContext);
-
-	// Render the body using the model shader.
-	result = modelShader->Render(deviceContext, body->GetIndexCount(), worldMatrix, *viewMatrix, *projectionMatrix, 
-									 light->GetAmbientColor(), light->GetDiffuseColor(), light->GetDirection(), body->GetTexture());
-
-	
-	// Render the turret using the model shader
-	D3DXMatrixTranslation(&turretRelativeHeight, 0.0f, 5.0f, 0.0f);
-	worldMatrix = worldMatrix * turretRelativeHeight;
-
-	turret->Render(deviceContext);
-
-	result = modelShader->Render(deviceContext, turret->GetIndexCount(), worldMatrix, *viewMatrix, *projectionMatrix, 
-									 light->GetAmbientColor(), light->GetDiffuseColor(), light->GetDirection(), turret->GetTexture());
-
-	return result;
+	return worldMatrix;
 }
 
 void PlayerClass::LookUpward(bool keydown)

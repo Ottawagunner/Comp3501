@@ -119,15 +119,20 @@ bool ApplicationClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidt
 	}
 	
 	// Create the player
-	m_Player = new PlayerClass;
-	if (!m_Player)
-	{
-		return false;
-	}
+	m_Player = new PlayerClass(m_PlayerModel, m_ModelShader);
+	m_PlayerTurret = new TurretClass(m_PlayerTurretModel, m_ModelShader, m_Player);
 
 	// Create the enemies
-	m_Enemies.push_back(new EnemyClass(5.0f, 0.0f, 80.0f));
+	m_Enemies.push_back(new EnemyClass(m_EnemyModel, m_ModelShader, 5.0f, 0.0f, 80.0f));
 	
+	// Add to array of modeled objects
+	m_Models.push_back(m_Player);
+	m_Models.push_back(m_PlayerTurret);
+	
+	for(std::vector<EnemyClass*>::iterator it = m_Enemies.begin(); it != m_Enemies.end(); ++it) {
+		m_Models.push_back(*it);
+	}
+
 	// Create the camera object.
 	m_Camera = new CameraClass;
 	if(!m_Camera)
@@ -523,11 +528,14 @@ bool ApplicationClass::Frame()
 bool ApplicationClass::HandleInput(float frameTime)
 {
 	bool keyDown, result;
-	float posX, posY, posZ, rotX, rotY, rotZ;
+	float posX, posY, posZ;
+	float turretPosX, turretPosY, turretPosZ;
+	float turretRotX, turretRotY, turretRotZ;
 
 
 	// Set the frame time for calculating the updated position.
 	m_Player->SetFrameTime(frameTime);
+	m_PlayerTurret->SetFrameTime(frameTime);
 
 	// Handle the input.
 	keyDown = m_Input->IsAPressed();
@@ -542,8 +550,11 @@ bool ApplicationClass::HandleInput(float frameTime)
 	keyDown = m_Input->IsSPressed();
 	m_Player->MoveBackward(keyDown);
 
-	//keyDown = m_Input->IsAPressed();
-	//m_Player->MoveUpward(keyDown);
+	keyDown = m_Input->IsLeftPressed();
+	m_PlayerTurret->TurnLeft(keyDown);
+
+	keyDown = m_Input->IsRightPressed();
+	m_PlayerTurret->TurnRight(keyDown);
 
 	//keyDown = m_Input->IsZPressed();
 	//m_Player->MoveDownward(keyDown);
@@ -554,19 +565,24 @@ bool ApplicationClass::HandleInput(float frameTime)
 	//keyDown = m_Input->IsPgDownPressed();
 	//m_Player->LookDownward(keyDown);
 	
-	// Get the view point position/rotation.
+	// Get the view point position of player.
 	m_Player->GetPosition(posX, posY, posZ);
-	m_Player->GetRotation(rotX, rotY, rotZ);
-
+	
+	// Get position/rotation of turret.
+	m_PlayerTurret->GetRotation(turretRotX, turretRotY, turretRotZ);
+	m_PlayerTurret->GetPosition(turretPosX, turretPosY, turretPosZ);
+	
 	// Check if the player is shooting
 	keyDown = m_Input->IsSpacePressed();
 	if (keyDown)
 	{
-		m_Projectiles.push_back(new ProjectileClass(posX, posY, posZ, rotX, rotY, rotZ));
+		ProjectileClass* newProjectile = new ProjectileClass(m_EnemyModel, m_ModelShader, turretPosX, turretPosY, turretPosZ, turretRotX, turretRotY, turretRotZ);
+		m_Projectiles.push_back(newProjectile);
 	}
 
 	// Set the position of the camera.
-	m_Camera->SetRelativeToReference(posX, posY, posZ, rotY);
+	m_Camera->SetRelativeToReference(posX, posY, posZ, turretRotY);
+
 
 	// Update the position values in the text object.
 	result = m_Text->SetCameraPosition(posX, posY, posZ, m_Direct3D->GetDeviceContext());
@@ -576,7 +592,7 @@ bool ApplicationClass::HandleInput(float frameTime)
 	}
 
 	// Update the rotation values in the text object.
-	result = m_Text->SetCameraRotation(rotX, rotY, rotZ, m_Direct3D->GetDeviceContext());
+	result = m_Text->SetCameraRotation(turretRotX, turretRotY, turretRotZ, m_Direct3D->GetDeviceContext());
 	if(!result)
 	{
 		return false;
@@ -609,17 +625,13 @@ bool ApplicationClass::RenderGraphics()
 
 
 	// Render the player
-	ModelClass* playerModels [] = { m_PlayerModel, m_PlayerTurretModel };
-	m_Player->RenderModel(m_Direct3D->GetDeviceContext(), playerModels, m_ModelShader, m_Light, &viewMatrix, &projectionMatrix);
-
-	// Render the enemies
-	for(std::vector<EnemyClass*>::iterator it = m_Enemies.begin(); it != m_Enemies.end(); ++it) {
-		(*it)->RenderModel(m_Direct3D->GetDeviceContext(), &m_EnemyModel, m_ModelShader, m_Light, &viewMatrix, &projectionMatrix);
+	for(std::vector<ModeledObjectClass*>::iterator it = m_Models.begin(); it != m_Models.end(); ++it) {
+		(*it)->RenderModel(m_Direct3D->GetDeviceContext(), m_Light, &viewMatrix, &projectionMatrix);
 	}
-
+	
 	// Render the projectiles
 	for(std::vector<ProjectileClass*>::iterator it = m_Projectiles.begin(); it != m_Projectiles.end(); ++it) {
-		(*it)->RenderModel(m_Direct3D->GetDeviceContext(), &m_ProjectileModel, m_ModelShader, m_Light, &viewMatrix, &projectionMatrix);
+		(*it)->RenderModel(m_Direct3D->GetDeviceContext(), m_Light, &viewMatrix, &projectionMatrix);
 	}
 
 	// Render the terrain buffers.

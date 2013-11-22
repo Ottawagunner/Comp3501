@@ -1,11 +1,11 @@
 #include "enemyclass.h"
 
 
-EnemyClass::EnemyClass(void) : MobileEntityClass()
+EnemyClass::EnemyClass(ModelClass* model, ModelShaderClass* modelShader) : MobileEntityClass(model, modelShader)
 {
 }
 
-EnemyClass::EnemyClass(float x, float y, float z) : MobileEntityClass()
+EnemyClass::EnemyClass(ModelClass* model, ModelShaderClass* modelShader, float x, float y, float z) : MobileEntityClass(model, modelShader)
 {
 	m_positionX = x;
 	m_positionY = y;
@@ -18,10 +18,8 @@ EnemyClass::~EnemyClass(void)
 }
 
 
-bool EnemyClass::RenderModel(ID3D11DeviceContext* deviceContext,  ModelClass** model, ModelShaderClass* modelShader, LightClass* light, D3DXMATRIX* viewMatrix, D3DXMATRIX* projectionMatrix)
+D3DXMATRIX EnemyClass::GetWorldMatrix()
 {
-	bool result = true;
-
 	D3DXMATRIX worldMatrix, rotationMatrixY, scaleMatrix, translationMatrix;
 
 	//D3DXMatrixScaling(&scaleMatrix, 0.25f, 0.25f, 0.25f);
@@ -30,14 +28,7 @@ bool EnemyClass::RenderModel(ID3D11DeviceContext* deviceContext,  ModelClass** m
 
 	worldMatrix = /*scaleMatrix * */ rotationMatrixY * translationMatrix;
 
-	// Render the model buffers.
-	(*model)->Render(deviceContext);
-
-	// Render the model using the model shader.
-	result = modelShader->Render(deviceContext, (*model)->GetIndexCount(), worldMatrix, *viewMatrix, *projectionMatrix, 
-									 light->GetAmbientColor(), light->GetDiffuseColor(), light->GetDirection(), (*model)->GetTexture());
-
-	return result;
+	return worldMatrix;
 }
 
 // Simple AI to move the car around
