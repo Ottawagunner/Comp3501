@@ -12,11 +12,14 @@ PlayerClass::~PlayerClass(void)
 {
 }
 
-bool PlayerClass::RenderModel(ID3D11DeviceContext* deviceContext,  ModelClass* model, ModelShaderClass* modelShader,  LightClass* light, D3DXMATRIX* viewMatrix, D3DXMATRIX* projectionMatrix)
+bool PlayerClass::RenderModel(ID3D11DeviceContext* deviceContext,  ModelClass** model, ModelShaderClass* modelShader,  LightClass* light, D3DXMATRIX* viewMatrix, D3DXMATRIX* projectionMatrix)
 {
+	ModelClass* body = model[0];
+	ModelClass* turret = model[1];
+
 	bool result = true;
 
-	D3DXMATRIX worldMatrix, rotationMatrixY, scaleMatrix, translationMatrix;
+	D3DXMATRIX worldMatrix, rotationMatrixY, scaleMatrix, translationMatrix, turretRelativeHeight;
 
 	D3DXMatrixScaling(&scaleMatrix, 0.25f, 0.25f, 0.25f);
 	D3DXMatrixRotationY(&rotationMatrixY, (m_rotationY + 180.0f) * 0.0174532925f);
@@ -25,11 +28,21 @@ bool PlayerClass::RenderModel(ID3D11DeviceContext* deviceContext,  ModelClass* m
 	worldMatrix = scaleMatrix * rotationMatrixY * translationMatrix;
 
 	// Render the model buffers.
-	model->Render(deviceContext);
+	body->Render(deviceContext);
 
-	// Render the model using the model shader.
-	result = modelShader->Render(deviceContext, model->GetIndexCount(), worldMatrix, *viewMatrix, *projectionMatrix, 
-									 light->GetAmbientColor(), light->GetDiffuseColor(), light->GetDirection(), model->GetTexture());
+	// Render the body using the model shader.
+	result = modelShader->Render(deviceContext, body->GetIndexCount(), worldMatrix, *viewMatrix, *projectionMatrix, 
+									 light->GetAmbientColor(), light->GetDiffuseColor(), light->GetDirection(), body->GetTexture());
+
+	
+	// Render the turret using the model shader
+	D3DXMatrixTranslation(&turretRelativeHeight, 0.0f, 5.0f, 0.0f);
+	worldMatrix = worldMatrix * turretRelativeHeight;
+
+	turret->Render(deviceContext);
+
+	result = modelShader->Render(deviceContext, turret->GetIndexCount(), worldMatrix, *viewMatrix, *projectionMatrix, 
+									 light->GetAmbientColor(), light->GetDiffuseColor(), light->GetDirection(), turret->GetTexture());
 
 	return result;
 }

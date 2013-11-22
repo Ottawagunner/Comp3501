@@ -82,6 +82,14 @@ bool ApplicationClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidt
 		MessageBox(hwnd, L"Could not initialize the player model object.", L"Error", MB_OK);
 		return false;
 	}
+
+	m_PlayerTurretModel = new ModelClass;
+	result = m_PlayerTurretModel->Initialize(m_Direct3D->GetDevice(), "../Engine/data/turret.obj", L"../Engine/data/turret.dds");
+	if(!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the player turret model object.", L"Error", MB_OK);
+		return false;
+	}
 	
 	m_EnemyModel = new ModelClass;
 	result = m_EnemyModel->Initialize(m_Direct3D->GetDevice(),"../Engine/data/buggy.obj", L"../Engine/data/HUMMWV.dds");
@@ -328,6 +336,14 @@ void ApplicationClass::Shutdown()
 		m_PlayerModel = 0;
 	}
 
+	// Release the player turret model.
+	if(m_PlayerTurretModel)
+	{
+		m_PlayerTurretModel->Shutdown();
+		delete m_PlayerTurretModel;
+		m_PlayerTurretModel = 0;
+	}
+
 	// Release the enemy model
 	if(m_EnemyModel)
 	{
@@ -456,12 +472,20 @@ bool ApplicationClass::Frame()
 
 	// Move the projectiles
 	// TODO: Remove projectile from vector if its dead
-	for(std::vector<ProjectileClass*>::iterator it = m_Projectiles.begin(); it != m_Projectiles.end(); ++it) {
+	for(std::vector<ProjectileClass*>::iterator it = m_Projectiles.begin(); it != m_Projectiles.end();) {
 		
-		/*if ((*it)->IsStillAlive(m_Timer->GetTime()))
-		{*/
+		// If dead, remove
+		if (! (*it)->IsStillAlive() )
+		{
+			delete (*it);
+			(*it) = 0;
+			it = m_Projectiles.erase(it);
+		}
+		else
+		{
 			(*it)->Move();
-		//}
+			it++;
+		}
 	}
 
 	// Update the FPS value in the text object.
@@ -538,7 +562,7 @@ bool ApplicationClass::HandleInput(float frameTime)
 	keyDown = m_Input->IsSpacePressed();
 	if (keyDown)
 	{
-		m_Projectiles.push_back(new ProjectileClass(m_Timer->GetTime(), posX, posY, posZ, rotX, rotY, rotZ));
+		m_Projectiles.push_back(new ProjectileClass(posX, posY, posZ, rotX, rotY, rotZ));
 	}
 
 	// Set the position of the camera.
@@ -583,17 +607,19 @@ bool ApplicationClass::RenderGraphics()
 	m_Direct3D->GetProjectionMatrix(projectionMatrix);
 	m_Direct3D->GetOrthoMatrix(orthoMatrix);
 
+
 	// Render the player
-	m_Player->RenderModel(m_Direct3D->GetDeviceContext(), m_PlayerModel, m_ModelShader, m_Light, &viewMatrix, &projectionMatrix);
+	ModelClass* playerModels [] = { m_PlayerModel, m_PlayerTurretModel };
+	m_Player->RenderModel(m_Direct3D->GetDeviceContext(), playerModels, m_ModelShader, m_Light, &viewMatrix, &projectionMatrix);
 
 	// Render the enemies
 	for(std::vector<EnemyClass*>::iterator it = m_Enemies.begin(); it != m_Enemies.end(); ++it) {
-		(*it)->RenderModel(m_Direct3D->GetDeviceContext(), m_EnemyModel, m_ModelShader, m_Light, &viewMatrix, &projectionMatrix);
+		(*it)->RenderModel(m_Direct3D->GetDeviceContext(), &m_EnemyModel, m_ModelShader, m_Light, &viewMatrix, &projectionMatrix);
 	}
 
 	// Render the projectiles
 	for(std::vector<ProjectileClass*>::iterator it = m_Projectiles.begin(); it != m_Projectiles.end(); ++it) {
-		(*it)->RenderModel(m_Direct3D->GetDeviceContext(), m_ProjectileModel, m_ModelShader, m_Light, &viewMatrix, &projectionMatrix);
+		(*it)->RenderModel(m_Direct3D->GetDeviceContext(), &m_ProjectileModel, m_ModelShader, m_Light, &viewMatrix, &projectionMatrix);
 	}
 
 	// Render the terrain buffers.

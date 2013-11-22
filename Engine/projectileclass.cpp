@@ -1,20 +1,20 @@
 #include "projectileclass.h"
 
 
-ProjectileClass::ProjectileClass(float birthday, float px, float py, float pz, float rx, float ry, float rz)
+ProjectileClass::ProjectileClass(float px, float py, float pz, float rx, float ry, float rz)
 {
-	m_positionX = px;
-	m_positionY = py;
-	m_positionZ = pz;
+	m_positionX = m_initialPositionX = px;
+	m_positionY = m_initialPositionY = py;
+	m_positionZ = m_initialPositionZ = pz;
 
 	m_rotationX = rx;
 	m_rotationY = ry;
 	m_rotationZ = rz;
 
-	m_secondsAlive = 5.0f;
-	m_birthday = birthday;
-
-	m_speed = 0.5f;
+	m_speed = 1.5f;
+	
+	m_maxDistance = 120.0f;
+	m_isDead = false;
 }
 
 
@@ -22,12 +22,23 @@ ProjectileClass::~ProjectileClass(void)
 {
 }
 
-bool ProjectileClass::IsStillAlive(float gameTime)
+bool ProjectileClass::IsStillAlive()
 {
-	return (gameTime - m_birthday) > m_secondsAlive;
+	// Check to see if the projectile has gone farther than its max distance
+	float a = m_positionX - m_initialPositionX;
+	float b = m_positionZ - m_initialPositionZ;
+
+	float c = sqrt(a*a + b*b);
+
+	return c <= m_maxDistance && !m_isDead;
 }
 
-bool ProjectileClass::RenderModel(ID3D11DeviceContext* deviceContext, ModelClass* model, ModelShaderClass* modelShader, LightClass* light, D3DXMATRIX* viewMatrix, D3DXMATRIX* projectionMatrix)
+void ProjectileClass::Stop()
+{
+	m_isDead = true;
+}
+
+bool ProjectileClass::RenderModel(ID3D11DeviceContext* deviceContext, ModelClass** model, ModelShaderClass* modelShader, LightClass* light, D3DXMATRIX* viewMatrix, D3DXMATRIX* projectionMatrix)
 {
 	bool result = true;
 
@@ -40,11 +51,11 @@ bool ProjectileClass::RenderModel(ID3D11DeviceContext* deviceContext, ModelClass
 	worldMatrix = scaleMatrix * /*rotationMatrix * */translationMatrix;
 
 	// Render the model buffers.
-	model->Render(deviceContext);
+	(*model)->Render(deviceContext);
 
 	// Render the model using the model shader.
-	result = modelShader->Render(deviceContext, model->GetIndexCount(), worldMatrix, *viewMatrix, *projectionMatrix, 
-									 light->GetAmbientColor(), light->GetDiffuseColor(), light->GetDirection(), model->GetTexture());
+	result = modelShader->Render(deviceContext, (*model)->GetIndexCount(), worldMatrix, *viewMatrix, *projectionMatrix, 
+									 light->GetAmbientColor(), light->GetDiffuseColor(), light->GetDirection(), (*model)->GetTexture());
 
 	return result;
 }

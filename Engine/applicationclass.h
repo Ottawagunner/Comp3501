@@ -18,6 +18,7 @@ const float SCREEN_NEAR = 0.1f;
 // MY CLASS INCLUDES //
 ///////////////////////
 #include <vector>
+#include <ctime>
 
 #include "inputclass.h"
 #include "d3dclass.h"
@@ -74,6 +75,7 @@ private:
 	PlayerClass* m_Player;
 	ModelShaderClass* m_ModelShader;
 	ModelClass* m_PlayerModel;
+	ModelClass* m_PlayerTurretModel;
 	ModelClass* m_EnemyModel;
 	ModelClass* m_ProjectileModel;
 	std::vector<EnemyClass*> m_Enemies;

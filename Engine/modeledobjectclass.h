@@ -23,7 +23,7 @@
 class ModeledObjectClass
 {
 public:
-	virtual bool	RenderModel(ID3D11DeviceContext*, ModelClass*, ModelShaderClass*, LightClass*, D3DXMATRIX*, D3DXMATRIX*) = 0;
+	virtual bool RenderModel(ID3D11DeviceContext*, ModelClass**, ModelShaderClass*, LightClass*, D3DXMATRIX*, D3DXMATRIX*) = 0;
 };
 
 

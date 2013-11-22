@@ -9,7 +9,7 @@ public:
 	PlayerClass(void);
 	~PlayerClass(void);
 
-	bool	RenderModel(ID3D11DeviceContext*, ModelClass*, ModelShaderClass*, LightClass*, D3DXMATRIX*, D3DXMATRIX*);
+	bool	RenderModel(ID3D11DeviceContext*, ModelClass**, ModelShaderClass*, LightClass*, D3DXMATRIX*, D3DXMATRIX*);
 	
 	// Player only methods
 	void LookUpward(bool);
