@@ -1,7 +1,7 @@
 #include "projectileclass.h"
 
 
-ProjectileClass::ProjectileClass(ModelClass* model, ModelShaderClass* modelShader, float px, float py, float pz, float rx, float ry, float rz) : ModeledObjectClass(model, modelShader)
+ProjectileClass::ProjectileClass(ModelClass* model, ModelShaderClass* modelShader, float px, float py, float pz, float rx, float ry, float rz) : MobileEntityClass(model, modelShader)
 {
 	m_positionX = m_initialPositionX = px;
 	m_positionY = m_initialPositionY = py;
@@ -11,7 +11,9 @@ ProjectileClass::ProjectileClass(ModelClass* model, ModelShaderClass* modelShade
 	m_rotationY = ry;
 	m_rotationZ = rz;
 
-	m_speed = 1.5f;
+	m_forwardSpeed = 1.5f;
+
+	m_width = 5.0f;
 	
 	m_maxDistance = 120.0f;
 	m_isDead = false;
@@ -42,7 +44,7 @@ D3DXMATRIX ProjectileClass::GetWorldMatrix()
 {
 	D3DXMATRIX worldMatrix, translationMatrix, scaleMatrix, rotationMatrix;
 
-	D3DXMatrixScaling(&scaleMatrix, 0.10f, 0.10f, 0.10f);
+	D3DXMatrixScaling(&scaleMatrix, 0.05f, 0.05f, 0.05f);
 	D3DXMatrixTranslation(&translationMatrix, m_positionX, m_positionY, m_positionZ);
 	//D3DXMatrixRotationY(&rotationMatrix, m_rotationY);
 
@@ -51,7 +53,7 @@ D3DXMATRIX ProjectileClass::GetWorldMatrix()
 	return worldMatrix;
 }
 
-void ProjectileClass::Move()
+void ProjectileClass::MoveForward(bool redundant)
 {
 	float radians;
 
@@ -59,6 +61,6 @@ void ProjectileClass::Move()
 	radians = m_rotationY * 0.0174532925f;
 
 	// Update the position.
-	m_positionX += sinf(radians) * m_speed;
-	m_positionZ += cosf(radians) * m_speed;
+	m_positionX += sinf(radians) * m_forwardSpeed;
+	m_positionZ += cosf(radians) * m_forwardSpeed;
 }

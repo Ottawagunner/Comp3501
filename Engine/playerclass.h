@@ -1,7 +1,6 @@
 #pragma once
 
 #include "mobileentityclass.h"
-#include "turretclass.h"
 
 class PlayerClass :
 	public MobileEntityClass

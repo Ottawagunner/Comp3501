@@ -3,6 +3,9 @@
 
 TurretClass::TurretClass(ModelClass* model, ModelShaderClass* modelShader, MobileEntityClass* parent) : MobileEntityClass(model, modelShader)
 {
+	m_width = 5.0f;
+	m_height = 5.0f;
+
 	m_parent = parent;
 }
 
@@ -20,7 +23,7 @@ D3DXMATRIX TurretClass::GetWorldMatrix()
 	
 	// Set own position to that of parent, not the best spot to do this...
 	m_positionX = parentX;
-	m_positionY = parentY + 5.0f;
+	m_positionY = parentY + 7.0f;
 	m_positionZ = parentZ;
 
 	D3DXMatrixRotationY(&initialModelFixRotation, D3DX_PI/2);

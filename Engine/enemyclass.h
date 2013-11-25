@@ -4,7 +4,6 @@ class EnemyClass :
 	public MobileEntityClass
 {
 public:
-	EnemyClass(ModelClass* model, ModelShaderClass* modelShader);
 	EnemyClass(ModelClass* model, ModelShaderClass* modelShader, float x, float y, float z);
 	~EnemyClass(void);
 

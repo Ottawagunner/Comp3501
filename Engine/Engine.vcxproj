@@ -81,6 +81,7 @@
     <ClCompile Include="applicationclass.cpp" />
     <ClCompile Include="bitmapclass.cpp" />
     <ClCompile Include="cameraclass.cpp" />
+    <ClCompile Include="collisionmanagerclass.cpp" />
     <ClCompile Include="cpuclass.cpp" />
     <ClCompile Include="d3dclass.cpp" />
     <ClCompile Include="enemyclass.cpp" />
@@ -110,6 +111,7 @@
     <ClInclude Include="applicationclass.h" />
     <ClInclude Include="bitmapclass.h" />
     <ClInclude Include="cameraclass.h" />
+    <ClInclude Include="collisionmanagerclass.h" />
     <ClInclude Include="cpuclass.h" />
     <ClInclude Include="d3dclass.h" />
     <ClInclude Include="enemyclass.h" />

@@ -3,6 +3,9 @@
 
 PlayerClass::PlayerClass(ModelClass* model, ModelShaderClass* modelShader) : MobileEntityClass(model, modelShader)
 {
+	m_width = 8.0f;
+	m_height = 5.0f;
+
 	m_lookUpSpeed    = 0.0f;
 	m_lookDownSpeed  = 0.0f;
 }

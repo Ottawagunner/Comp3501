@@ -1,15 +1,15 @@
 #include "enemyclass.h"
 
-
-EnemyClass::EnemyClass(ModelClass* model, ModelShaderClass* modelShader) : MobileEntityClass(model, modelShader)
-{
-}
-
 EnemyClass::EnemyClass(ModelClass* model, ModelShaderClass* modelShader, float x, float y, float z) : MobileEntityClass(model, modelShader)
 {
+	m_width = 30.0f;
+	m_height = 5.0f;
+
 	m_positionX = x;
 	m_positionY = y;
 	m_positionZ = z;
+
+	m_health = 10.0f;
 }
 
 

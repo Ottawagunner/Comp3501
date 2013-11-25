@@ -58,6 +58,8 @@ bool TerrainShaderClass::Render(ID3D11DeviceContext* deviceContext, int indexCou
 
 
 	// Set the shader parameters that it will use for rendering.
+	//D3DXMatrixScaling(&worldMatrix, 20.0f, 20.0f, 20.0f);
+
 	result = SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix, ambientColor, diffuseColor, lightDirection, texture);
 	if(!result)
 	{

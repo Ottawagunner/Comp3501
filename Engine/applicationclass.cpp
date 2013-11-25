@@ -73,6 +73,9 @@ bool ApplicationClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidt
 		return false;
 	}
 
+	// Initialize collision manager
+	m_CollisionManager = new CollisionManagerClass;
+
 	// Initialize all models, maybe move this into a graphics class?
 	
 	m_PlayerModel = new ModelClass;
@@ -88,6 +91,14 @@ bool ApplicationClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidt
 	if(!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the player turret model object.", L"Error", MB_OK);
+		return false;
+	}
+	
+	m_BulletModel = new ModelClass;
+	result = m_BulletModel->Initialize(m_Direct3D->GetDevice(), "../Engine/data/beachball.obj", L"../Engine/data/turret.dds");
+	if(!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the bullet model object.", L"Error", MB_OK);
 		return false;
 	}
 	
@@ -488,9 +499,20 @@ bool ApplicationClass::Frame()
 		}
 		else
 		{
-			(*it)->Move();
+			(*it)->MoveForward();
 			it++;
 		}
+	}
+
+	// Check for collisions
+	for(std::vector<EnemyClass*>::iterator it = m_Enemies.begin(); it != m_Enemies.end(); ++it) {
+		for(std::vector<ProjectileClass*>::iterator itP = m_Projectiles.begin(); itP != m_Projectiles.end(); ++itP) {
+		
+		if (m_CollisionManager->AreColliding((*it), (*itP)))
+		{
+			(*it)->TakeDamage(1.0f);
+		}
+	}
 	}
 
 	// Update the FPS value in the text object.
@@ -531,7 +553,19 @@ bool ApplicationClass::HandleInput(float frameTime)
 	float posX, posY, posZ;
 	float turretPosX, turretPosY, turretPosZ;
 	float turretRotX, turretRotY, turretRotZ;
+	float cameraPosX, cameraPosY, cameraPosZ;
+	float cameraRotX, cameraRotY, cameraRotZ;
 
+	// Update the timer we use for staggering input
+	struct tm y2k;
+	double seconds;
+
+	y2k.tm_hour = 0;   y2k.tm_min = 0; y2k.tm_sec = 0;
+	y2k.tm_year = 113; y2k.tm_mon = 0; y2k.tm_mday = 1;
+
+	time(&timer);  /* get current time; same as: timer = time(NULL)  */
+
+	seconds = difftime(timer,mktime(&y2k));
 
 	// Set the frame time for calculating the updated position.
 	m_Player->SetFrameTime(frameTime);
@@ -556,8 +590,8 @@ bool ApplicationClass::HandleInput(float frameTime)
 	keyDown = m_Input->IsRightPressed();
 	m_PlayerTurret->TurnRight(keyDown);
 
-	//keyDown = m_Input->IsZPressed();
-	//m_Player->MoveDownward(keyDown);
+	keyDown = m_Input->IsQPressed();
+	if(keyDown) m_Camera->ToggleView(seconds);
 
 	//keyDown = m_Input->IsPgUpPressed();
 	//m_Player->LookUpward(keyDown);
@@ -576,23 +610,24 @@ bool ApplicationClass::HandleInput(float frameTime)
 	keyDown = m_Input->IsSpacePressed();
 	if (keyDown)
 	{
-		ProjectileClass* newProjectile = new ProjectileClass(m_EnemyModel, m_ModelShader, turretPosX, turretPosY, turretPosZ, turretRotX, turretRotY, turretRotZ);
-		m_Projectiles.push_back(newProjectile);
+		m_Projectiles.push_back(new ProjectileClass(m_BulletModel, m_ModelShader, turretPosX, turretPosY, turretPosZ, turretRotX, turretRotY, turretRotZ));
 	}
 
 	// Set the position of the camera.
 	m_Camera->SetRelativeToReference(posX, posY, posZ, turretRotY);
 
+	m_Camera->GetPosition(cameraPosX, cameraPosY, cameraPosZ);
+	m_Camera->GetRotation(cameraRotX, cameraRotY, cameraRotZ);
 
 	// Update the position values in the text object.
-	result = m_Text->SetCameraPosition(posX, posY, posZ, m_Direct3D->GetDeviceContext());
+	result = m_Text->SetCameraPosition(cameraPosX, cameraPosY, cameraPosZ, m_Direct3D->GetDeviceContext());
 	if(!result)
 	{
 		return false;
 	}
 
 	// Update the rotation values in the text object.
-	result = m_Text->SetCameraRotation(turretRotX, turretRotY, turretRotZ, m_Direct3D->GetDeviceContext());
+	result = m_Text->SetCameraRotation(cameraRotX, cameraRotY, cameraRotZ, m_Direct3D->GetDeviceContext());
 	if(!result)
 	{
 		return false;
@@ -622,7 +657,6 @@ bool ApplicationClass::RenderGraphics()
 	m_Camera->GetViewMatrix(viewMatrix);
 	m_Direct3D->GetProjectionMatrix(projectionMatrix);
 	m_Direct3D->GetOrthoMatrix(orthoMatrix);
-
 
 	// Render the player
 	for(std::vector<ModeledObjectClass*>::iterator it = m_Models.begin(); it != m_Models.end(); ++it) {

@@ -5,7 +5,8 @@
 
 
 // This determines camera's position relative to player
-const D3DXVECTOR3*	m_thirdPersonReference = new D3DXVECTOR3(0, 25.0f, -40.0f);
+const D3DXVECTOR3	m_thirdPersonReference = D3DXVECTOR3(0, 25.0f, -40.0f);
+const D3DXVECTOR3	m_firstPersonReference = D3DXVECTOR3(0, 15.0f, 0.0f);
 
 CameraClass::CameraClass()
 {
@@ -16,6 +17,12 @@ CameraClass::CameraClass()
 	m_rotationX = 0.0f;
 	m_rotationY = 0.0f;
 	m_rotationZ = 0.0f;
+
+	m_turretRotationY = 0.0f;
+
+	m_personReference = m_thirdPersonReference;
+
+	m_lastRecordedTime = 0;
 }
 
 
@@ -45,10 +52,11 @@ void CameraClass::SetRelativeToReference(float px, float py, float pz, float ry)
 
 	// Update avatar position
 	m_avatarPosition = D3DXVECTOR3(px, py, pz);
+	m_turretRotationY = ry;
 	
 	// Perform calculations to position camera behind avatar
 	D3DXMatrixRotationY(&rotationMatrixY, ry * 0.0174532925f);
-	D3DXVec3Transform(&transformedReference, m_thirdPersonReference, &rotationMatrixY);
+	D3DXVec3Transform(&transformedReference, &m_personReference, &rotationMatrixY);
 	cameraPosition = D3DXVECTOR3(transformedReference.x, transformedReference.y, transformedReference.z) + m_avatarPosition;
 
 	m_positionX = cameraPosition.x;
@@ -66,18 +74,21 @@ void CameraClass::SetRotation(float x, float y, float z)
 	return;
 }
 
-
-D3DXVECTOR3 CameraClass::GetPosition()
+void CameraClass::GetPosition(float& x, float& y, float& z)	
 {
-	return D3DXVECTOR3(m_positionX, m_positionY, m_positionZ);
-}
+	x = m_positionX;
+	y = m_positionY;
+	z = m_positionZ;
+	return;
+};
 
-
-D3DXVECTOR3 CameraClass::GetRotation()
+void CameraClass::GetRotation(float& x, float& y, float& z)
 {
-	return D3DXVECTOR3(m_rotationX, m_rotationY, m_rotationZ);
-}
-
+	x = m_rotationX;
+	y = m_rotationY;
+	z = m_rotationZ;
+	return;
+};
 
 void CameraClass::Render()
 {
@@ -107,7 +118,22 @@ void CameraClass::Render()
 	D3DXVec3TransformCoord(&m_avatarPosition, &m_avatarPosition, &rotationMatrix);
 	D3DXVec3TransformCoord(&up, &up, &rotationMatrix);
 
-	D3DXVec3Add(&lookAt, &m_avatarPosition, &D3DXVECTOR3(0.0f, 10.0f, 0.0f));
+	if (m_personReference == m_firstPersonReference)
+	{
+		// Convert degrees to radians.
+		float radians = m_turretRotationY * 0.0174532925f;
+
+		// Update the position.
+		float X = sinf(radians) * 80.0f;
+		float Z = cosf(radians) * 80.0f;
+
+		D3DXVec3Add(&lookAt, &m_avatarPosition, &D3DXVECTOR3(X, 0.0f, Z));
+	}
+	else
+	{
+		D3DXVec3Add(&lookAt, &m_avatarPosition, &D3DXVECTOR3(0.0f, 10.0f, 0.0f));
+	}
+
 	// Finally create the view matrix from the three updated vectors.
 	D3DXMatrixLookAtLH(&m_viewMatrix, &position, &lookAt, &up);
 
@@ -119,4 +145,19 @@ void CameraClass::GetViewMatrix(D3DXMATRIX& viewMatrix)
 {
 	viewMatrix = m_viewMatrix;
 	return;
+}
+
+void CameraClass::ToggleView(float time)
+{
+	if (time - m_lastRecordedTime > 0.5f) m_lastRecordedTime = time;
+	else return;
+
+	if (m_personReference == m_thirdPersonReference)
+	{
+		m_personReference = m_firstPersonReference;
+	}
+	else
+	{
+		m_personReference = m_thirdPersonReference;
+	}
 }

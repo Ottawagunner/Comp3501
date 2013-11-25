@@ -18,7 +18,7 @@ const float SCREEN_NEAR = 0.1f;
 // MY CLASS INCLUDES //
 ///////////////////////
 #include <vector>
-#include <ctime>
+#include <time.h>
 
 #include "inputclass.h"
 #include "d3dclass.h"
@@ -38,6 +38,8 @@ const float SCREEN_NEAR = 0.1f;
 #include "playerclass.h"
 #include "enemyclass.h"
 #include "projectileclass.h"
+#include "turretclass.h"
+#include "collisionmanagerclass.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 // Class name: ApplicationClass
@@ -58,6 +60,8 @@ private:
 	bool RenderGraphics();
 
 private:
+	time_t timer;
+
 	HWND* m_Hwnd;
 	InputClass* m_Input;
 	D3DClass* m_Direct3D;
@@ -66,6 +70,7 @@ private:
 	TimerClass* m_Timer;
 	FpsClass* m_Fps;
 	CpuClass* m_Cpu;
+	CollisionManagerClass* m_CollisionManager;
 	FontShaderClass* m_FontShader;
 	TextClass* m_Text;
 	TerrainShaderClass* m_TerrainShader;
@@ -79,6 +84,7 @@ private:
 	ModelClass* m_PlayerTurretModel;
 	ModelClass* m_EnemyModel;
 	ModelClass* m_ProjectileModel;
+	ModelClass* m_BulletModel;
 	std::vector<EnemyClass*> m_Enemies;
 	std::vector<ProjectileClass*> m_Projectiles;
 

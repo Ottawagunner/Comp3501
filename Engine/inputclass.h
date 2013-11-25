@@ -49,7 +49,7 @@ public:
 	bool IsWPressed();
 	bool IsSPressed();
 	bool IsDPressed();
-	bool IsZPressed();
+	bool IsQPressed();
 	bool IsSpacePressed();
 	bool IsPgUpPressed();
 	bool IsPgDownPressed();

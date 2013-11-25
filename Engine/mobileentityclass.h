@@ -41,6 +41,11 @@ public:
 	void TurnLeft(bool);
 	void TurnRight(bool);
 
+	float GetWidth();
+	float GetHeight();
+
+	float TakeDamage(float damageAmount);
+
 	// Inherited from ModeledObjectClass, passing it on
 	virtual D3DXMATRIX GetWorldMatrix() = 0;
 
@@ -55,6 +60,9 @@ protected:
 	float m_leftTurnSpeed, m_rightTurnSpeed;
 
 	float m_health;
+
+	float m_width;
+	float m_height;
 };
 
 #endif

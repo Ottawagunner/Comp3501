@@ -22,6 +22,16 @@ MobileEntityClass::MobileEntityClass(ModelClass* model, ModelShaderClass* modelS
 	m_health = 0.0f;
 }
 
+float MobileEntityClass::GetHeight()
+{
+	return m_height;
+}
+
+float MobileEntityClass::GetWidth()
+{
+	return m_width;
+}
+
 void MobileEntityClass::SetPosition(float x, float y, float z)
 {
 	m_positionX = x;
@@ -252,4 +262,11 @@ void MobileEntityClass::TurnRight(bool keydown)
 	}
 
 	return;
+}
+
+float MobileEntityClass::TakeDamage(float damageAmount)
+{
+	m_health -= damageAmount;
+
+	return m_health;
 }
