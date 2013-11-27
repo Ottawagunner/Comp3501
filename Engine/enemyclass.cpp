@@ -1,6 +1,6 @@
 #include "enemyclass.h"
 
-EnemyClass::EnemyClass(ModelClass* model, ModelShaderClass* modelShader, float x, float y, float z) : MobileEntityClass(model, modelShader)
+EnemyClass::EnemyClass(ModelClass* model, ModelShaderClass* modelShader, float x, float y, float z) : VehicleClass(model, modelShader)
 {
 	m_width = 30.0f;
 	m_height = 5.0f;
@@ -9,7 +9,7 @@ EnemyClass::EnemyClass(ModelClass* model, ModelShaderClass* modelShader, float x
 	m_positionY = y;
 	m_positionZ = z;
 
-	m_health = 10.0f;
+	m_health = 2.0f;
 }
 
 
@@ -34,6 +34,9 @@ D3DXMATRIX EnemyClass::GetWorldMatrix()
 // Simple AI to move the car around
 void EnemyClass::Move()
 {
-	MoveForward(true);
-	TurnLeft(true);
+	if(m_health > 0.0f)
+	{
+		MoveForward(true);
+		TurnLeft(true);
+	}
 }

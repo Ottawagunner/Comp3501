@@ -18,8 +18,6 @@ MobileEntityClass::MobileEntityClass(ModelClass* model, ModelShaderClass* modelS
 	m_downwardSpeed  = 0.0f;
 	m_leftTurnSpeed  = 0.0f;
 	m_rightTurnSpeed = 0.0f;
-
-	m_health = 0.0f;
 }
 
 float MobileEntityClass::GetHeight()
@@ -262,11 +260,4 @@ void MobileEntityClass::TurnRight(bool keydown)
 	}
 
 	return;
-}
-
-float MobileEntityClass::TakeDamage(float damageAmount)
-{
-	m_health -= damageAmount;
-
-	return m_health;
 }

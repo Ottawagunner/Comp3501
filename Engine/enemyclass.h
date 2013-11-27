@@ -1,7 +1,7 @@
 #pragma once
-#include "mobileentityclass.h"
+#include "vehicleclass.h"
 class EnemyClass :
-	public MobileEntityClass
+	public VehicleClass
 {
 public:
 	EnemyClass(ModelClass* model, ModelShaderClass* modelShader, float x, float y, float z);

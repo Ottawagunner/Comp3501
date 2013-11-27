@@ -95,7 +95,7 @@ bool ApplicationClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidt
 	}
 	
 	m_BulletModel = new ModelClass;
-	result = m_BulletModel->Initialize(m_Direct3D->GetDevice(), "../Engine/data/beachball.obj", L"../Engine/data/turret.dds");
+	result = m_BulletModel->Initialize(m_Direct3D->GetDevice(), "../Engine/data/beachball.obj", L"../Engine/data/brown.dds");
 	if(!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the bullet model object.", L"Error", MB_OK);
@@ -506,13 +506,22 @@ bool ApplicationClass::Frame()
 
 	// Check for collisions
 	for(std::vector<EnemyClass*>::iterator it = m_Enemies.begin(); it != m_Enemies.end(); ++it) {
-		for(std::vector<ProjectileClass*>::iterator itP = m_Projectiles.begin(); itP != m_Projectiles.end(); ++itP) {
-		
-		if (m_CollisionManager->AreColliding((*it), (*itP)))
+		for(std::vector<ProjectileClass*>::iterator itP = m_Projectiles.begin(); itP != m_Projectiles.end();) 
 		{
-			(*it)->TakeDamage(1.0f);
+			if (m_CollisionManager->AreColliding((*it), (*itP)))
+			{
+				(*it)->TakeDamage(1.0f);
+				
+				// Remove bullet
+				delete (*itP);
+				(*itP) = 0;
+				itP = m_Projectiles.erase(itP);
+			}
+			else
+			{
+				itP++;
+			}
 		}
-	}
 	}
 
 	// Update the FPS value in the text object.
@@ -610,7 +619,10 @@ bool ApplicationClass::HandleInput(float frameTime)
 	keyDown = m_Input->IsSpacePressed();
 	if (keyDown)
 	{
-		m_Projectiles.push_back(new ProjectileClass(m_BulletModel, m_ModelShader, turretPosX, turretPosY, turretPosZ, turretRotX, turretRotY, turretRotZ));
+		if (m_Player->CanShoot(seconds))
+		{
+			m_Projectiles.push_back(new ProjectileClass(m_BulletModel, m_ModelShader, turretPosX, turretPosY, turretPosZ, turretRotX, turretRotY, turretRotZ));
+		}
 	}
 
 	// Set the position of the camera.

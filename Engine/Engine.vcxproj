@@ -106,6 +106,7 @@
     <ClCompile Include="textureshaderclass.cpp" />
     <ClCompile Include="timerclass.cpp" />
     <ClCompile Include="turretclass.cpp" />
+    <ClCompile Include="vehicleclass.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="applicationclass.h" />
@@ -135,6 +136,7 @@
     <ClInclude Include="textureshaderclass.h" />
     <ClInclude Include="timerclass.h" />
     <ClInclude Include="turretclass.h" />
+    <ClInclude Include="vehicleclass.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="font.ps" />

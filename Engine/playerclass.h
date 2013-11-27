@@ -1,9 +1,9 @@
 #pragma once
 
-#include "mobileentityclass.h"
+#include "vehicleclass.h"
 
 class PlayerClass :
-	public MobileEntityClass
+	public VehicleClass
 {
 public:
 	PlayerClass(ModelClass* model, ModelShaderClass* modelShader);
