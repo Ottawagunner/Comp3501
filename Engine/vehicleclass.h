@@ -9,7 +9,9 @@ public:
 	~VehicleClass(void);
 
 	float TakeDamage(float damageAmount);
+	
 	bool CanShoot(float time);
+	bool IsAlive();
 
 protected:
 	float m_health;

@@ -96,6 +96,8 @@
     <ClCompile Include="modelclass.cpp" />
     <ClCompile Include="modeledobjectclass.cpp" />
     <ClCompile Include="modelshaderclass.cpp" />
+    <ClCompile Include="particleshaderclass.cpp" />
+    <ClCompile Include="particlesystemclass.cpp" />
     <ClCompile Include="playerclass.cpp" />
     <ClCompile Include="projectileclass.cpp" />
     <ClCompile Include="systemclass.cpp" />
@@ -126,6 +128,8 @@
     <ClInclude Include="modelclass.h" />
     <ClInclude Include="modeledobjectclass.h" />
     <ClInclude Include="modelshaderclass.h" />
+    <ClInclude Include="particleshaderclass.h" />
+    <ClInclude Include="particlesystemclass.h" />
     <ClInclude Include="playerclass.h" />
     <ClInclude Include="projectileclass.h" />
     <ClInclude Include="systemclass.h" />
@@ -143,6 +147,8 @@
     <None Include="font.vs" />
     <None Include="model.ps" />
     <None Include="model.vs" />
+    <None Include="particle.ps" />
+    <None Include="particle.vs" />
     <None Include="terrain.ps" />
     <None Include="terrain.vs" />
     <None Include="texture.ps" />

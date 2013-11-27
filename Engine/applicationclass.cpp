@@ -19,6 +19,8 @@ ApplicationClass::ApplicationClass()
 	m_Light = 0;
 	m_TextureShader = 0;
 	m_MiniMap = 0;
+	m_ParticleShader = 0;
+	m_ParticleSystem = 0;
 }
 
 
@@ -243,6 +245,35 @@ bool ApplicationClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidt
 		return false;
 	}
 
+	// Create the particle shader object.
+	m_ParticleShader = new ParticleShaderClass;
+	if(!m_ParticleShader)
+	{
+		return false;
+	}
+
+	// Initialize the particle shader object.
+	result = m_ParticleShader->Initialize(m_Direct3D->GetDevice(), hwnd);
+	if(!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the particle shader object.", L"Error", MB_OK);
+		return false;
+	}
+
+	// Create the particle system object.
+	m_ParticleSystem = new ParticleSystemClass;
+	if(!m_ParticleSystem)
+	{
+		return false;
+	}
+
+	// Initialize the particle system object.
+	result = m_ParticleSystem->Initialize(m_Direct3D->GetDevice(), L"../Engine/data/star.dds");
+	if(!result)
+	{
+		return false;
+	}
+
 	// Retrieve the video card information.
 	m_Direct3D->GetVideoCardInfo(videoCard, videoMemory);
 
@@ -335,6 +366,22 @@ void ApplicationClass::Shutdown()
 		m_TextureShader->Shutdown();
 		delete m_TextureShader;
 		m_TextureShader = 0;
+	}
+
+	// Release the particle system object.
+	if(m_ParticleSystem)
+	{
+		m_ParticleSystem->Shutdown();
+		delete m_ParticleSystem;
+		m_ParticleSystem = 0;
+	}
+
+	// Release the particle shader object.
+	if(m_ParticleShader)
+	{
+		m_ParticleShader->Shutdown();
+		delete m_ParticleShader;
+		m_ParticleShader = 0;
 	}
 
 	// Release the light object.
@@ -482,8 +529,20 @@ bool ApplicationClass::Frame()
 
 	// Make the enemies move
 	for(std::vector<EnemyClass*>::iterator it = m_Enemies.begin(); it != m_Enemies.end(); ++it) {
-		(*it)->SetFrameTime(m_Timer->GetTime());
-		(*it)->Move();
+		EnemyClass* enemy = (*it);
+		if ( enemy->IsAlive() )
+		{
+			enemy->SetFrameTime(m_Timer->GetTime());
+			enemy->Move();
+		}
+		else
+		{
+			// Run the frame processing for the particle system.
+			float x, y, z;
+			enemy->GetPosition(x, y, z);
+			m_ParticleSystem->SetPosition(x,y,z);
+			m_ParticleSystem->Frame(m_Timer->GetTime(), m_Direct3D->GetDeviceContext());
+		}
 	}
 
 	// Move the projectiles
@@ -690,6 +749,22 @@ bool ApplicationClass::RenderGraphics()
 	{
 		return false;
 	}
+
+	// Turn on alpha blending.
+	m_Direct3D->TurnOnAlphaBlending();
+
+	// Put the particle system vertex and index buffers on the graphics pipeline to prepare them for drawing.
+	m_ParticleSystem->Render(m_Direct3D->GetDeviceContext());
+
+	// Render the model using the texture shader.
+	result = m_ParticleShader->Render(m_Direct3D->GetDeviceContext(), m_ParticleSystem->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, 
+					  m_ParticleSystem->GetTexture());
+	if(!result)
+	{
+		return false;
+	}
+	// Turn off alpha blending.
+	m_Direct3D->TurnOffAlphaBlending();
 
 	// Turn off the Z buffer to begin all 2D rendering.
 	m_Direct3D->TurnZBufferOff();

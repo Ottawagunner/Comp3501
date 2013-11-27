@@ -40,6 +40,8 @@ const float SCREEN_NEAR = 0.1f;
 #include "projectileclass.h"
 #include "turretclass.h"
 #include "collisionmanagerclass.h"
+#include "particleshaderclass.h"
+#include "particlesystemclass.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 // Class name: ApplicationClass
@@ -89,6 +91,10 @@ private:
 	std::vector<ProjectileClass*> m_Projectiles;
 
 	std::vector<ModeledObjectClass*> m_Models;
+
+	ParticleShaderClass* m_ParticleShader;
+	ParticleSystemClass* m_ParticleSystem;
+
 };
 
 #endif

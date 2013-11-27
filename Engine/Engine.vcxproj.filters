@@ -114,6 +114,12 @@
     <ClCompile Include="vehicleclass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="particlesystemclass.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="particleshaderclass.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="applicationclass.h">
@@ -200,6 +206,12 @@
     <ClInclude Include="vehicleclass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="particlesystemclass.h">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="particleshaderclass.h">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="font.ps">
@@ -224,6 +236,12 @@
       <Filter>Shader Files</Filter>
     </None>
     <None Include="model.vs">
+      <Filter>Shader Files</Filter>
+    </None>
+    <None Include="particle.vs">
+      <Filter>Shader Files</Filter>
+    </None>
+    <None Include="particle.ps">
       <Filter>Shader Files</Filter>
     </None>
   </ItemGroup>

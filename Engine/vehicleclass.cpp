@@ -10,6 +10,10 @@ VehicleClass::~VehicleClass(void)
 {
 }
 
+bool VehicleClass::IsAlive()
+{
+	return m_health > 0.0f;
+}
 
 float VehicleClass::TakeDamage(float damageAmount)
 {
