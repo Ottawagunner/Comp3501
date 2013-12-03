@@ -8,26 +8,28 @@ Marks will be allocated according to the following schema:
 /50 Required technical elements:
 
 /5 Properly behaved first- and third-person camera, with ability to use either depending on situation
-	- Keyboard controlled first + third-person cameras
+**Implementation status**: Keyboard controlled first + third-person cameras
 
 /5 Hierarchical tank model, minimally separate turret and tank body, ideally with more moving parts (e.g., wheels)
-	- Implemented
+**Implementation status**: Hierarchical tank model with separate turret and tank body
 
 /5 Sensible lighting calculations for game objects
-	- Implemented
+**Implementation status**: Diffuse and ambient lighting implemented, no specular
 
 /5 Environment containing multiple objects, hopefully textured in sensible way
-	- Half-implemented
+**Implementation status**: Texturing is mostly proper. There are only a couple of objects
 
 /10 Weapons fire, with visuals, collisions, and game logic
-	- Weapons fire, with visuals, collisions, and game logic.
+**Implementation status**: Weapons fire, with visuals, collisions, and game logic (not saying it's pretty)
 
 /10 Integration of particle systems into game, triggered by game events (e.g., destroying a target)
-	- Enemies catch fire when killed.
+**Implementation status**: Enemies catch fire when killed (shot twice)
 
 /5 Linear physics of objects in game
+**Implementation status**: Not sure what this entails exactly
 
 /5 Rotational physics, at least of tank (even 2D rotational physics will get some points here if you cannot do full 3D rotations)
+**Implementation status**: No rotational physics
 
 ***
 
