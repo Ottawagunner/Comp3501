@@ -20,13 +20,14 @@ EnemyClass::~EnemyClass(void)
 
 D3DXMATRIX EnemyClass::GetWorldMatrix()
 {
-	D3DXMATRIX worldMatrix, rotationMatrixY, scaleMatrix, translationMatrix;
+	D3DXMATRIX worldMatrix, initialPositionChangeMatrix, rotationMatrixY, scaleMatrix, translationMatrix;
 
-	//D3DXMatrixScaling(&scaleMatrix, 0.25f, 0.25f, 0.25f);
+	D3DXMatrixTranslation(&initialPositionChangeMatrix, 100.0f, 0.0f, -80.0f);
+	D3DXMatrixScaling(&scaleMatrix, 0.15f, 0.15f, 0.15f);
 	D3DXMatrixRotationY(&rotationMatrixY, (m_rotationY + 180.0f) * 0.0174532925f);
 	D3DXMatrixTranslation(&translationMatrix, m_positionX, m_positionY, m_positionZ);
 
-	worldMatrix = /*scaleMatrix * */ rotationMatrixY * translationMatrix;
+	worldMatrix = initialPositionChangeMatrix * scaleMatrix * rotationMatrixY * translationMatrix;
 
 	return worldMatrix;
 }

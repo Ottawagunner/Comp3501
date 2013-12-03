@@ -44,7 +44,7 @@ D3DXMATRIX ProjectileClass::GetWorldMatrix()
 {
 	D3DXMATRIX worldMatrix, translationMatrix, scaleMatrix, rotationMatrix;
 
-	D3DXMatrixScaling(&scaleMatrix, 0.05f, 0.05f, 0.05f);
+	D3DXMatrixScaling(&scaleMatrix, 0.5f, 0.5f, 0.5f);
 	D3DXMatrixTranslation(&translationMatrix, m_positionX, m_positionY, m_positionZ);
 	//D3DXMatrixRotationY(&rotationMatrix, m_rotationY);
 

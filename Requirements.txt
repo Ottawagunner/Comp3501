@@ -17,9 +17,10 @@ Marks will be allocated according to the following schema:
 	- Half-implemented
 
 /10 Weapons fire, with visuals, collisions, and game logic
-	- Weapons fire, with visuals. That's it.
+	- Weapons fire, with visuals, collisions, and game logic.
 
 /10 Integration of particle systems into game, triggered by game events (e.g., destroying a target)
+	- Enemies catch fire when killed.
 
 /5 Linear physics of objects in game
 

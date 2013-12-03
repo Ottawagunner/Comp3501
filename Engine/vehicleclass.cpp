@@ -24,7 +24,7 @@ float VehicleClass::TakeDamage(float damageAmount)
 
 bool VehicleClass::CanShoot(float time)
 {
-	if (time - m_lastRecordedTime > 0.5f)
+	if (time - m_lastRecordedTime > 0.1f)
 	{
 		m_lastRecordedTime = time;
 		return true;

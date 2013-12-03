@@ -97,7 +97,7 @@ bool ApplicationClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidt
 	}
 	
 	m_BulletModel = new ModelClass;
-	result = m_BulletModel->Initialize(m_Direct3D->GetDevice(), "../Engine/data/beachball.obj", L"../Engine/data/brown.dds");
+	result = m_BulletModel->Initialize(m_Direct3D->GetDevice(), "../Engine/data/crystal_1.obj", L"../Engine/data/pumpkin.dds");
 	if(!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the bullet model object.", L"Error", MB_OK);
@@ -105,7 +105,7 @@ bool ApplicationClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidt
 	}
 	
 	m_EnemyModel = new ModelClass;
-	result = m_EnemyModel->Initialize(m_Direct3D->GetDevice(),"../Engine/data/buggy.obj", L"../Engine/data/HUMMWV.dds");
+	result = m_EnemyModel->Initialize(m_Direct3D->GetDevice(),"../Engine/data/buggy3.obj", L"../Engine/data/buggy.dds");
 	if(!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the enemy model object.", L"Error", MB_OK);

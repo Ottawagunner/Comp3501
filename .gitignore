@@ -1,0 +1,6 @@
+*.log
+Engine.opensdf
+Engine.v11.suo
+Engine/shader-error.txt
+Engine/data/Thumbs.db
+Debug/
