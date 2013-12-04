@@ -111,14 +111,14 @@
     <ClCompile Include="collisionmanagerclass.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="vehicleclass.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="particlesystemclass.cpp">
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="particleshaderclass.cpp">
       <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="vehicleclass.cpp">
+      <Filter>Source Files\Entities</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -203,13 +203,13 @@
     <ClInclude Include="collisionmanagerclass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="vehicleclass.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="particlesystemclass.h">
       <Filter>Header Files\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="particleshaderclass.h">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="vehicleclass.h">
       <Filter>Header Files\Graphics</Filter>
     </ClInclude>
   </ItemGroup>

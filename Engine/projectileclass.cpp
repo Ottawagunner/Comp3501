@@ -3,13 +3,14 @@
 
 ProjectileClass::ProjectileClass(ModelClass* model, ModelShaderClass* modelShader, float px, float py, float pz, float rx, float ry, float rz) : MobileEntityClass(model, modelShader)
 {
-	m_positionX = m_initialPositionX = px;
-	m_positionY = m_initialPositionY = py;
-	m_positionZ = m_initialPositionZ = pz;
-
 	m_rotationX = rx;
 	m_rotationY = ry;
 	m_rotationZ = rz;
+
+	m_positionX = m_initialPositionX = px;
+	// We add a constant value to the y coordinate to position the projectile correctly in front of the turret
+	m_positionY = m_initialPositionY = py + 4.0f;
+	m_positionZ = m_initialPositionZ = pz;
 
 	m_forwardSpeed = 1.5f;
 
