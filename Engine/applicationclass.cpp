@@ -136,7 +136,7 @@ bool ApplicationClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidt
 	m_PlayerTurret = new TurretClass(m_PlayerTurretModel, m_ModelShader, m_Player);
 
 	// Create the enemies
-	m_Enemies.push_back(new EnemyClass(m_EnemyModel, m_ModelShader, 5.0f, 0.0f, 80.0f));
+	m_Enemies.push_back(new EnemyClass(m_EnemyModel, m_ModelShader, 5.0f, 0.0f, 280.0f));
 	
 	// Add to array of modeled objects
 	m_Models.push_back(m_Player);
@@ -718,7 +718,7 @@ bool ApplicationClass::RenderGraphics()
 
 
 	// Clear the scene.
-	m_Direct3D->BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
+	m_Direct3D->BeginScene(0.0f, 0.74f, 1.0f, 1.0f);
 
 	// Generate the view matrix based on the camera's position.
 	m_Camera->Render();
