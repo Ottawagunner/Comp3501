@@ -10,6 +10,7 @@ PlayerClass::PlayerClass(ModelClass* model, ModelShaderClass* modelShader) : Veh
 	m_lookDownSpeed  = 0.0f;
 
 	m_health = 10.0f;
+	m_state.m = 10.0f;
 }
 
 
@@ -23,7 +24,7 @@ D3DXMATRIX PlayerClass::GetWorldMatrix()
 
 	D3DXMatrixScaling(&scaleMatrix, 0.25f, 0.25f, 0.25f);
 	D3DXMatrixRotationY(&rotationMatrixY, (m_rotationY + 180.0f) * 0.0174532925f);
-	D3DXMatrixTranslation(&translationMatrix, m_positionX, m_positionY, m_positionZ);
+	D3DXMatrixTranslation(&translationMatrix, m_state.x.x, m_state.x.y, m_state.x.z);
 
 	worldMatrix = scaleMatrix * rotationMatrixY * translationMatrix;
 

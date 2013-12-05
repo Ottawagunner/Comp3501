@@ -5,9 +5,9 @@ EnemyClass::EnemyClass(ModelClass* model, ModelShaderClass* modelShader, float x
 	m_width = 30.0f;
 	m_height = 5.0f;
 
-	m_positionX = x;
-	m_positionY = y;
-	m_positionZ = z;
+	m_state.x.x = x;
+	m_state.x.y = y;
+	m_state.x.z = z;
 
 	m_health = 2.0f;
 }
@@ -25,7 +25,7 @@ D3DXMATRIX EnemyClass::GetWorldMatrix()
 	D3DXMatrixTranslation(&initialPositionChangeMatrix, 100.0f, 0.0f, -80.0f);
 	D3DXMatrixScaling(&scaleMatrix, 0.15f, 0.15f, 0.15f);
 	D3DXMatrixRotationY(&rotationMatrixY, (m_rotationY + 180.0f) * 0.0174532925f);
-	D3DXMatrixTranslation(&translationMatrix, m_positionX, m_positionY, m_positionZ);
+	D3DXMatrixTranslation(&translationMatrix, m_state.x.x, m_state.x.y, m_state.x.z);
 
 	worldMatrix = initialPositionChangeMatrix * scaleMatrix * rotationMatrixY * translationMatrix;
 
@@ -37,7 +37,7 @@ void EnemyClass::Move()
 {
 	if(m_health > 0.0f)
 	{
-		MoveForward(true);
+		ApplyForwardForce(true);
 		TurnLeft(true);
 	}
 }

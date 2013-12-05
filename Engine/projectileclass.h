@@ -19,6 +19,9 @@ public:
 protected:		
 	float m_initialPositionX, m_initialPositionY, m_initialPositionZ;
 
+	// Remove when implementing physics
+	float m_forwardSpeed;
+
 	float m_maxDistance;
 	bool m_isDead;
 };

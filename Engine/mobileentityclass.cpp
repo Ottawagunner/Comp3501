@@ -2,22 +2,26 @@
 
 MobileEntityClass::MobileEntityClass(ModelClass* model, ModelShaderClass* modelShader) : ModeledObjectClass(model, modelShader)
 {
-	m_positionX = 0.0f;
-	m_positionY = 0.0f;
-	m_positionZ = 0.0f;
-	
+	m_state.x.x = 0.0f;
+	m_state.x.y = 0.0f;
+	m_state.x.z = 0.0f;
+
+	m_state.v.x = 0.0f;
+	m_state.v.y = 0.0f;
+	m_state.v.z = 0.0f;
+
+	m_state.m = 10.0f;
+
 	m_rotationX = 0.0f;
 	m_rotationY = 0.0f;
 	m_rotationZ = 0.0f;
 
 	m_frameTime = 0.0f;
 
-	m_forwardSpeed   = 0.0f;
-	m_backwardSpeed  = 0.0f;
-	m_upwardSpeed    = 0.0f;
-	m_downwardSpeed  = 0.0f;
 	m_leftTurnSpeed  = 0.0f;
 	m_rightTurnSpeed = 0.0f;
+
+	m_maxSpeed = 0.05f;
 }
 
 float MobileEntityClass::GetHeight()
@@ -30,27 +34,12 @@ float MobileEntityClass::GetWidth()
 	return m_width;
 }
 
-void MobileEntityClass::SetPosition(float x, float y, float z)
-{
-	m_positionX = x;
-	m_positionY = y;
-	m_positionZ = z;
-	return;
-};
-
-void MobileEntityClass::SetRotation(float x, float y, float z)
-{
-	m_rotationX = x;
-	m_rotationY = y;
-	m_rotationZ = z;
-	return;
-};
-
 void MobileEntityClass::GetPosition(float& x, float& y, float& z)	
 {
-	x = m_positionX;
-	y = m_positionY;
-	z = m_positionZ;
+	x = m_state.x.x;
+	y = m_state.x.y;
+	z = m_state.x.z;
+
 	return;
 };
 
@@ -68,129 +57,39 @@ void MobileEntityClass::SetFrameTime(float time)
 	return;
 };
 
-void MobileEntityClass::MoveForward(bool keydown)
+void MobileEntityClass::ApplyForwardForce(bool keydown)
 {
-	float radians;
-
-
-	// Update the forward speed movement based on the frame time and whether the user is holding the key down or not.
 	if(keydown)
 	{
-		m_forwardSpeed += m_frameTime * 0.001f;
-
-		if(m_forwardSpeed > (m_frameTime * 0.03f))
-		{
-			m_forwardSpeed = m_frameTime * 0.03f;
-		}
-	}
-	else
-	{
-		m_forwardSpeed -= m_frameTime * 0.0007f;
-
-		if(m_forwardSpeed < 0.0f)
-		{
-			m_forwardSpeed = 0.0f;
-		}
-	}
-
-	// Convert degrees to radians.
-	radians = m_rotationY * 0.0174532925f;
-
-	// Update the position.
-	m_positionX += sinf(radians) * m_forwardSpeed;
-	m_positionZ += cosf(radians) * m_forwardSpeed;
-
-	return;
-}
-
-void MobileEntityClass::MoveBackward(bool keydown)
-{
-	float radians;
-
-
-	// Update the backward speed movement based on the frame time and whether the user is holding the key down or not.
-	if(keydown)
-	{
-		m_backwardSpeed += m_frameTime * 0.001f;
-
-		if(m_backwardSpeed > (m_frameTime * 0.03f))
-		{
-			m_backwardSpeed = m_frameTime * 0.03f;
-		}
-	}
-	else
-	{
-		m_backwardSpeed -= m_frameTime * 0.0007f;
+		float force = 0.0001;
+		float radians = m_rotationY * 0.0174532925f;		
+		float forceX = sinf(radians) * force;
+		float forceZ = cosf(radians) * force;
 		
-		if(m_backwardSpeed < 0.0f)
-		{
-			m_backwardSpeed = 0.0f;
-		}
-	}
-
-	// Convert degrees to radians.
-	radians = m_rotationY * 0.0174532925f;
-
-	// Update the position.
-	m_positionX -= sinf(radians) * m_backwardSpeed;
-	m_positionZ -= cosf(radians) * m_backwardSpeed;
-
-	return;
-}
-
-void MobileEntityClass::MoveUpward(bool keydown)
-{
-	// Update the upward speed movement based on the frame time and whether the user is holding the key down or not.
-	if(keydown)
-	{
-		m_upwardSpeed += m_frameTime * 0.003f;
-
-		if(m_upwardSpeed > (m_frameTime * 0.03f))
-		{
-			m_upwardSpeed = m_frameTime * 0.03f;
-		}
+		m_forwardForce = D3DXVECTOR3(forceX, 0.0f, forceZ);
 	}
 	else
 	{
-		m_upwardSpeed -= m_frameTime * 0.002f;
-
-		if(m_upwardSpeed < 0.0f)
-		{
-			m_upwardSpeed = 0.0f;
-		}
+		m_forwardForce = D3DXVECTOR3(0,0,0);	
 	}
-
-	// Update the height position.
-	m_positionY += m_upwardSpeed;
-
 	return;
 }
 
-void MobileEntityClass::MoveDownward(bool keydown)
+void MobileEntityClass::ApplyBackwardForce(bool keydown)
 {
-	// Update the downward speed movement based on the frame time and whether the user is holding the key down or not.
 	if(keydown)
 	{
-		m_downwardSpeed += m_frameTime * 0.003f;
-
-		if(m_downwardSpeed > (m_frameTime * 0.03f))
-		{
-			m_downwardSpeed = m_frameTime * 0.03f;
-		}
+		float force = -0.0001;
+		float radians = m_rotationY * 0.0174532925f;		
+		float forceX = sinf(radians) * force;
+		float forceZ = cosf(radians) * force;
+		
+		m_backwardForce = D3DXVECTOR3(forceX, 0.0f, forceZ);
 	}
 	else
 	{
-		m_downwardSpeed -= m_frameTime * 0.002f;
-
-		if(m_downwardSpeed < 0.0f)
-		{
-			m_downwardSpeed = 0.0f;
-		}
+		m_backwardForce = D3DXVECTOR3(0,0,0);	
 	}
-
-	// Update the height position.
-	m_positionY -= m_downwardSpeed;
-
 	return;
 }
 
@@ -260,4 +159,60 @@ void MobileEntityClass::TurnRight(bool keydown)
 	}
 
 	return;
+}
+	
+Derivative MobileEntityClass::Evaluate(float t)
+{
+	Derivative output;
+	output.dx = m_state.v;
+	output.dv = Acceleration(t);
+	return output;
+}
+
+Derivative MobileEntityClass::Evaluate(float t, float dt, const Derivative &d)
+{
+        State state;
+        state.x = m_state.x + d.dx*dt;
+        state.v = m_state.v + d.dv*dt;
+
+        Derivative output;
+        output.dx = state.v;
+        output.dv = Acceleration(t+dt);
+        return output;
+}
+
+D3DXVECTOR3 MobileEntityClass::Acceleration(float t)
+{
+	return GetNetForce()/m_state.m;
+}
+
+void MobileEntityClass::Integrate(float t, float dt)
+{
+        Derivative a = Evaluate(t);
+  /*      Derivative b = Evaluate(t, dt*0.5f, a);
+        Derivative c = Evaluate(t, dt*0.5f, b);
+        Derivative d = Evaluate(t, dt, c);
+
+		const D3DXVECTOR3 dxdt = 1.0f/6.0f * (a.dx + 2.0f*(b.dx + c.dx) + d.dx);
+        const D3DXVECTOR3 dvdt = 1.0f/6.0f * (a.dv + 2.0f*(b.dv + c.dv) + d.dv);
+
+        m_state.x = m_state.x + dxdt * dt;
+        m_state.v = m_state.v + dvdt * dt;
+*/
+		m_state.x = m_state.x + a.dx * dt;
+
+		// Put a cap on the velocity
+		if (GetMagnitude(m_state.v + a.dv * dt) < m_maxSpeed) 
+			m_state.v = m_state.v + a.dv * dt;
+}
+
+D3DXVECTOR3 MobileEntityClass::GetNetForce()
+{
+	return m_forwardForce + m_backwardForce;
+}
+
+float MobileEntityClass::GetMagnitude(D3DXVECTOR3 vec)
+{
+	float mag = sqrt(vec.x*vec.x + vec.y*vec.y + vec.z*vec.z);
+	return sqrt(vec.x*vec.x + vec.y*vec.y + vec.z*vec.z);
 }

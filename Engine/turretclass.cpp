@@ -22,15 +22,15 @@ D3DXMATRIX TurretClass::GetWorldMatrix()
 	m_parent->GetPosition(parentX, parentY, parentZ);
 	
 	// Set own position to that of parent, not the best spot to do this...
-	m_positionX = parentX;
-	m_positionY = parentY + 7.0f;
-	m_positionZ = parentZ;
+	m_state.x.x = parentX;
+	m_state.x.y = parentY + 7.0f;
+	m_state.x.z = parentZ;
 
 	D3DXMatrixRotationY(&initialModelFixRotation, D3DX_PI/2);
 	D3DXMatrixScaling(&scaleMatrix, 0.25f, 0.25f, 0.25f);
 	D3DXMatrixRotationY(&rotationMatrixY, m_rotationY * 0.0174532925f);
 
-	D3DXMatrixTranslation(&parentTranslationMatrix, m_positionX, m_positionY, m_positionZ);
+	D3DXMatrixTranslation(&parentTranslationMatrix, m_state.x.x, m_state.x.y, m_state.x.z);
 
 	worldMatrix = scaleMatrix * initialModelFixRotation * rotationMatrixY * parentTranslationMatrix;
 

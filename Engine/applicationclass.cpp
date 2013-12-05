@@ -647,10 +647,12 @@ bool ApplicationClass::HandleInput(float frameTime)
 	m_Player->TurnRight(keyDown);
 
 	keyDown = m_Input->IsWPressed();
-	m_Player->MoveForward(keyDown);
+	m_Player->ApplyForwardForce(keyDown);
 
 	keyDown = m_Input->IsSPressed();
-	m_Player->MoveBackward(keyDown);
+	m_Player->ApplyBackwardForce(keyDown);
+
+	m_Player->Integrate(frameTime, frameTime*2);
 
 	keyDown = m_Input->IsLeftPressed();
 	m_PlayerTurret->TurnLeft(keyDown);
@@ -660,12 +662,6 @@ bool ApplicationClass::HandleInput(float frameTime)
 
 	keyDown = m_Input->IsQPressed();
 	if(keyDown) m_Camera->ToggleView(seconds);
-
-	//keyDown = m_Input->IsPgUpPressed();
-	//m_Player->LookUpward(keyDown);
-
-	//keyDown = m_Input->IsPgDownPressed();
-	//m_Player->LookDownward(keyDown);
 	
 	// Get the view point position of player.
 	m_Player->GetPosition(posX, posY, posZ);
