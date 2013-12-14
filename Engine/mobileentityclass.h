@@ -56,6 +56,7 @@ public:
 
 	float GetWidth();
 	float GetHeight();
+	void SetGrid(int, int, float); 
 
 protected:
 	State m_state;
@@ -75,6 +76,8 @@ protected:
 	float m_width;
 	float m_height;
 	float m_maxSpeed;
+
+	float grid[2000][2000]; 
 
 	float GetMagnitude(D3DXVECTOR3 vec);
 };

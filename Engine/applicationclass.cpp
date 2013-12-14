@@ -134,7 +134,8 @@ bool ApplicationClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidt
 	// Create the player
 	m_Player = new PlayerClass(m_PlayerModel, m_ModelShader);
 	m_PlayerTurret = new TurretClass(m_PlayerTurretModel, m_ModelShader, m_Player);
-
+	
+	
 	// Create the enemies
 	m_Enemies.push_back(new EnemyClass(m_EnemyModel, m_ModelShader, 5.0f, 0.0f, 280.0f));
 	
@@ -178,6 +179,14 @@ bool ApplicationClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidt
 	{
 		MessageBox(*m_Hwnd, L"Could not initialize the terrain object.", L"Error", MB_OK);
 		return false;
+	}
+
+	for (int i = 0; i < 2000; i++)
+	{
+		for (int j = 0; j < 2000; j++)
+		{
+			m_Player->SetGrid(i, j, m_Terrain->GetVertexHeight(i, j));
+		}
 	}
 
 	// Create the timer object.

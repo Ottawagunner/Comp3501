@@ -61,10 +61,10 @@ bool TerrainShaderClass::Render(ID3D11DeviceContext* deviceContext, int indexCou
 	
 	// Make the terrain larger (probably not the best way to do this)
 	D3DXMATRIX scaleMatrix, translationMatrix;
-	D3DXMatrixScaling(&scaleMatrix, 10.0f, 10.0f, 10.0f);
-	D3DXMatrixTranslation(&translationMatrix, -280.0f, -5.0f, -200.0f);
+	//D3DXMatrixScaling(&scaleMatrix, 1.0f, 1.0f, 1.0f);
+	//D3DXMatrixTranslation(&translationMatrix, -280.0f, -5.0f, -200.0f);
 
-	worldMatrix = scaleMatrix * translationMatrix;
+	//worldMatrix = scaleMatrix * translationMatrix;
 
 	result = SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix, ambientColor, diffuseColor, lightDirection, texture);
 	if(!result)
@@ -98,7 +98,7 @@ bool TerrainShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR
 	pixelShaderBuffer = 0;
 
     // Compile the vertex shader code.
-	result = D3DX11CompileFromFile(vsFilename, NULL, NULL, "TerrainVertexShader", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, NULL, 
+	result = D3DX11CompileFromFile(vsFilename, NULL, NULL, "TerrainVertexShader", "vs_4_0", D3D10_SHADER_ENABLE_BACKWARDS_COMPATIBILITY, 0, NULL, 
 								   &vertexShaderBuffer, &errorMessage, NULL);
 	if(FAILED(result))
 	{
@@ -117,7 +117,7 @@ bool TerrainShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR
 	}
 
     // Compile the pixel shader code.
-	result = D3DX11CompileFromFile(psFilename, NULL, NULL, "TerrainPixelShader", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, NULL, 
+	result = D3DX11CompileFromFile(psFilename, NULL, NULL, "TerrainPixelShader", "ps_4_0", D3D10_SHADER_ENABLE_BACKWARDS_COMPATIBILITY, 0, NULL, 
 								   &pixelShaderBuffer, &errorMessage, NULL);
 	if(FAILED(result))
 	{

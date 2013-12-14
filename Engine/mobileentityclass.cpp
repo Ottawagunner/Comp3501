@@ -37,8 +37,11 @@ float MobileEntityClass::GetWidth()
 void MobileEntityClass::GetPosition(float& x, float& y, float& z)	
 {
 	x = m_state.x.x;
-	y = m_state.x.y;
 	z = m_state.x.z;
+	int i = x;
+	int j = z; 
+	m_state.x.y = grid[i][j];
+	y = m_state.x.y; 
 
 	return;
 };
@@ -50,6 +53,11 @@ void MobileEntityClass::GetRotation(float& x, float& y, float& z)
 	z = m_rotationZ;
 	return;
 };
+
+void MobileEntityClass::SetGrid(int x, int z, float y)
+{
+	grid[x][z] = y;
+}
 
 void MobileEntityClass::SetFrameTime(float time)
 {

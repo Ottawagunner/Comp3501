@@ -11,6 +11,7 @@
 #include <d3d11.h>
 #include <d3dx10math.h>
 #include <stdio.h>
+#include <vector>
 
 
 ///////////////////////
@@ -65,6 +66,10 @@ public:
 	ID3D11ShaderResourceView* GetTexture();
 	void GetTerrainSize(int&, int&);
 
+	int GetVertexCount();
+	void CopyVertexArray(void*);
+	float GetVertexHeight(int x, int y); 
+
 private:
 	bool LoadHeightMap(char*);
 	void NormalizeHeightMap();
@@ -87,6 +92,8 @@ private:
 	ID3D11Buffer *m_vertexBuffer, *m_indexBuffer;
 	HeightMapType* m_heightMap;
 	TextureClass* m_Texture;
+	VertexType* m_vertices;
+	float grid[2000][2000]; 
 };
 
 #endif

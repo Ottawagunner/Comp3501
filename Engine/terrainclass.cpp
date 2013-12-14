@@ -560,12 +560,16 @@ bool TerrainClass::LoadColorMap(char* filename)
 	return true;
 }
 
+float TerrainClass::GetVertexHeight(int x, int z)
+{
+	return grid[x][z]; 
+}
 
 bool TerrainClass::InitializeBuffers(ID3D11Device* device)
 {
 	VertexType* vertices;
 	unsigned long* indices;
-	int index, i, j;
+	int index, i, j, x, z; 
 	D3D11_BUFFER_DESC vertexBufferDesc, indexBufferDesc;
     D3D11_SUBRESOURCE_DATA vertexData, indexData;
 	HRESULT result;
@@ -680,6 +684,13 @@ bool TerrainClass::InitializeBuffers(ID3D11Device* device)
 		}
 	}
 
+	for (int i = 0; i < m_vertexCount; i++)
+	{
+		x = vertices[i].position.x;
+		z = vertices[i].position.z; 
+		grid[x][z] = vertices[i].position.y; 
+	}
+
 	// Set up the description of the static vertex buffer.
     vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
     vertexBufferDesc.ByteWidth = sizeof(VertexType) * m_vertexCount;
@@ -780,5 +791,17 @@ void TerrainClass::GetTerrainSize(int& width, int& height)
 	width = m_terrainWidth;
 	height = m_terrainHeight;
 
+	return;
+}
+
+int TerrainClass::GetVertexCount()
+{
+	return m_vertexCount;
+}
+
+
+void TerrainClass::CopyVertexArray(void* vertexList)
+{
+	memcpy(vertexList, m_vertices, sizeof(VertexType) * m_vertexCount);
 	return;
 }
